@@ -32,7 +32,7 @@ const EventsPage = () => {
           return a._id > b._id ? 1 : -1;
         });
         setEvents(response.data.data.events);
-        setActiveTab(response.data.data.events[0]._id);
+        setActiveTab(response.data.data.events[0]?._id);
       } catch (error) {
         console.error(error);
       }

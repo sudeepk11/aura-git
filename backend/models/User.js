@@ -11,12 +11,18 @@ const { nodemailerCreateMail, nodemailerSendMail, jwtCreate, bcryptCompare, genA
 
 // Constants
 const purposeData = new Map([
-  [ticketConfig.purposes.EMAIL_VERIFICATION, {
-    subject: "Email verification required",
-  }],
-  [ticketConfig.purposes.PASSWORD_RESET, {
-    subject: "Reset your account password",
-  }],
+  [
+    ticketConfig.purposes.EMAIL_VERIFICATION,
+    {
+      subject: "Email verification required",
+    },
+  ],
+  [
+    ticketConfig.purposes.PASSWORD_RESET,
+    {
+      subject: "Reset your account password",
+    },
+  ],
 ]);
 const userSchema = new mongoose.Schema({
   aura_id: {
@@ -67,18 +73,20 @@ const userSchema = new mongoose.Schema({
     minlength: [6, errors[400].shortPassword],
   },
   paid_for: {
-    type: [{
-      event_id: {
-        type: mongoose.Types.ObjectId,
-        required: [true, errors[400].eventIdRequired],
-        ref: "event",
+    type: [
+      {
+        event_id: {
+          type: mongoose.Types.ObjectId,
+          required: [true, errors[400].eventIdRequired],
+          ref: "event",
+        },
+        receipt_id: {
+          type: mongoose.Types.ObjectId,
+          required: [true, errors[500]],
+          ref: "receipt",
+        },
       },
-      receipt_id: {
-        type: mongoose.Types.ObjectId,
-        required: [true, errors[500]],
-        ref: "receipt",
-      },
-    }],
+    ],
     default: [],
   },
   tickets: {
@@ -106,17 +114,14 @@ const userSchema = new mongoose.Schema({
 // Methods
 userSchema.methods.createNewTicket = async function (purpose, data = null) {
   // Validate purpose
-  if (!Object.values(ticketConfig.purposes).includes(purpose))
-    throw Error(errors[500]);
+  if (!Object.values(ticketConfig.purposes).includes(purpose)) throw Error(errors[500]);
 
   // Check if email is already verified (in case of email verification)
-  if (purpose === ticketConfig.purposes.EMAIL_VERIFICATION && this.email_verified)
-    return 0;
+  if (purpose === ticketConfig.purposes.EMAIL_VERIFICATION && this.email_verified) return 0;
 
   // Check if a ticket is already open
   const ticketId = this.tickets[ticketConfig.user_tickets_fields[purpose]];
-  if (ticketId && await Ticket.findById(ticketId))
-    return 1;
+  if (ticketId && (await Ticket.findById(ticketId))) return 1;
 
   // Create ticket
   const ticket = await Ticket.create({
@@ -151,29 +156,28 @@ userSchema.methods.createNewTicket = async function (purpose, data = null) {
 };
 
 userSchema.methods.createToken = function () {
-  return jwtCreate({
-    id: this._id,
-    last_password_reset: this._profile_information.last_password_reset.getTime(),
-  }, jwtConfig.ages.login);
+  return jwtCreate(
+    {
+      id: this._id,
+      last_password_reset: this._profile_information.last_password_reset.getTime(),
+    },
+    jwtConfig.ages.login
+  );
 };
 
 // static method to login user
 userSchema.statics.login = async function (email, password) {
-  if (!isEmail(email))
-    throw Error(errors[400].invalidEmail);
+  if (!isEmail(email)) throw Error(errors[400].invalidEmail);
 
   // Check if user exists
   const user = await this.findOne({ email });
-  if (!user)
-    throw Error(errors[404].userNotFound);
+  if (!user) throw Error(errors[404].userNotFound);
 
   // Validate password
-  if (!(await bcryptCompare(user.password, password)))
-    throw Error(errors[403].passwordMismatch);
+  if (!(await bcryptCompare(user.password, password))) throw Error(errors[403].passwordMismatch);
 
   // Check if the email is verified
-  if (!user.email_verified)
-    throw Error(errors[403].emailUnverified);
+  if (!user.email_verified) throw Error(errors[403].emailUnverified);
 
   return user;
 };

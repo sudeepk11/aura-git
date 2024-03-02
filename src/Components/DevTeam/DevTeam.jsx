@@ -90,7 +90,7 @@ const team = [
 
 const DevTeam = () => {
   return (
-    <div className="py-10 bg-contactus bg-cover">
+    <div className="py-10 bg-devTeam bg-cover">
       <h2 className="text-2xl font-bold text-center">Dev Team</h2>
       <div className="grid md:grid-cols-4 grid-cols-1 my-5">
         {team.map((member) => (
