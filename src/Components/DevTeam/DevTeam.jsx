@@ -51,7 +51,7 @@ const team = [
   },
   {
     name: "Saumitra Topinkatti",
-    role: "Backend Developer",
+    role: "Full Stack Developer",
     image: SBT,
     linkedin:
       "https://in.linkedin.com/in/saumitra-topinkatti-45a577208?trk=public_profile_browsemap",
