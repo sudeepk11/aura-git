@@ -1,4 +1,3 @@
-import Venki from "../../Assets/Team/Venki.jpg";
 import π from "../../Assets/Team/π.jpg";
 import Vinayak from "../../Assets/Team/Vinayak.jpg";
 import Raj from "../../Assets/Team/Raj.jpg";
@@ -6,72 +5,61 @@ import Vaishnavi from "../../Assets/Team/VK.jpg";
 import Sanjitha from "../../Assets/Team/S3.jpg";
 import Tejaswith from "../../Assets/Team/Tejas.jpg";
 import Jeetendra from "../../Assets/Team/Jeetendra.jpg";
+import Philbert from "../../Assets/Team/philbert.jpg";
+import Adarsh from "../../Assets/Team/adarsh.jpg";
+import Shambavi from "../../Assets/Team/shambhavi.jpg";
+import Soumya from "../../Assets/Team/soumya.jpg";
+import Rohan from "../../Assets/Team/rohan.jpg";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 const council = [
   {
-    name: "Vaishnavi Kulkarni",
-    role: "General Secretary",
-    image: Vaishnavi,
-    instagram: "https://www.instagram.com/vaishnavi_k2310/",
-    phone: 9243221195,
-    handle: "vaishnavi_k2310",
-  },
-  {
-    name: "Vinayak Biswagar",
+    name: "Sumit Naik",
     role: "General Secretary",
     image: Vinayak,
-    phone: 7022683215,
+    phone: 8971061720,
   },
   {
-    name: "Sanjitha Bhat",
+    name: "Adarsh Belaskar",
     role: "General Secretary",
-    image: Sanjitha,
-    instagram: "https://www.instagram.com/Sanjitha_bhat/",
-    phone: 8431642248,
-    handle: "Sanjitha_bhat",
+    image: Adarsh,
+    // instagram: "https://www.instagram.com/vaishnavi_k2310/",
+    phone: 8884294309,
+    // handle: "vaishnavi_k2310",
   },
   {
-    name: "Raj Bichu",
+    name: "Shambhavi Shirgurkar",
     role: "General Secretary",
-    image: Raj,
-    instagram: "https://www.instagram.com/rawwwj/",
-    phone: 7899570999,
-    handle: "rawwwj",
+    image: Soumya,
+    // instagram: "https://www.instagram.com/Sanjitha_bhat/",
+    phone: 7022095209,
+    // handle: "Sanjitha_bhat",
   },
   {
-    name: "Venkatesh Dhongadi",
-    role: "Co-Ordinator",
-    image: Venki,
-    instagram: "https://www.instagram.com/flick_23/",
-    phone: 9972287030,
-    handle: "flick_23",
+    name: "Soumya Hurakadli",
+    role: "General Secretary",
+    image: Shambavi,
+    // instagram: "https://www.instagram.com/rawwwj/",
+    phone: 9148506325,
+    // handle: "rawwwj",
   },
   {
-    name: "Piyush Airani",
-    role: "Co-Ordinator",
-    image: π,
-    instagram: "https://www.instagram.com/pi_22by7/",
-    phone: 9545100233,
-    handle: "pi22by7",
+    name: "Rohan Mangalore",
+    role: "Cultural Co-Ordinator",
+    image: Rohan,
+    // instagram: "https://www.instagram.com/jeetendrakumargarag/",
+    phone: 9902799657,
+    // handle: "jeetendrakumargarag",
   },
   {
-    name: "Jeetendra Kumar Garag",
-    role: "Co-Ordinator",
-    image: Jeetendra,
-    instagram: "https://www.instagram.com/jeetendrakumargarag/",
-    phone: 9343184895,
-    handle: "jeetendrakumargarag",
-  },
-  {
-    name: "Tejaswith Shigihalli",
-    role: "Co-Ordinator",
-    image: Tejaswith,
-    instagram: "https://www.instagram.com/_tejas_x_5/",
-    phone: 9535457747,
-    handle: "_tejas_x_5",
+    name: "Philbert Dsouza",
+    role: "Technical Co-Ordinator",
+    image: Philbert,
+    // instagram: "https://www.instagram.com/_tejas_x_5/",
+    phone: 9380017175,
+    // handle: "_tejas_x_5",
   },
 ];
 

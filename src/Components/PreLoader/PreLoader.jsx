@@ -1,4 +1,4 @@
-import logo from "../../Assets/logo.png";
+import logo from "../../Assets/logo_new.png";
 import welcome from "../../Assets/welcome.png";
 
 const PreLoader = ({ type }) => {

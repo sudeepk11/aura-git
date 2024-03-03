@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useUser } from "../../Contexts/userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
-import logo from "../../Assets/logo.png";
+import logo from "../../Assets/logo_new.png";
 import api from "../../Utils/axios.config";
 import "./NavBar.css";
 
@@ -31,7 +31,7 @@ export const NavBar = () => {
   };
 
   return (
-    <nav className="md:grid md:grid-cols-5 md:place-items-center flex justify-between items-center sticky top-0 w-full md:px-12 px-6 md:py-2 py-4 bg-slate-400 bg-clip-padding backdrop-filter backdrop-blur-lg border-1px bg-opacity-20 z-40 ">
+    <nav className="md:grid md:grid-cols-5 md:place-items-center flex justify-between items-center sticky top-0 w-full md:px-12 px-6 md:py-2 py-4 bg-slate-400 bg-clip-padding backdrop-filter backdrop-blur-lg border-1px bg-opacity-20 z-40">
       <div className="md:place-self-start">
         <Link className="font-bold text-xl" to="/">
           <img
