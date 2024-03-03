@@ -52,11 +52,11 @@ const TeamRegister = (props) => {
       setError(`Team size should be atleast ${props.min_size}`);
       return false;
     }
-    let p = /^AURA23-[A-Z]{3}-[0-9]{5}$/;
+    let p = /^AURA24-[A-Z]{3}-[0-9]{5}$/;
     for (let i = 0; i < team.length; i++) {
       if (!p.test(team[i])) {
         errorToast(
-          "One of the AURA IDs is invalid: Format is AURA23-XXX-12345"
+          "One of the AURA IDs is invalid: Format is AURA24-XXX-12345"
         );
         return false;
       }
