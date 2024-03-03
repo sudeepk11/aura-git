@@ -1,7 +1,7 @@
 import Kiran from "../../Assets/Team/Kiran.jpg";
 import Sudeep from "../../Assets/Team/Sudeep.jpg";
 import Piyush from "../../Assets/Team/π.jpg";
-import SBT from "../../Assets/Team/SBT.jpg";
+import SBT from "../../Assets/Team/SBT2.jpg";
 import Parishkar from "../../Assets/Team/Parishkar.jpg";
 import Kishor_Balgi from "../../Assets/Team/Kishor_Balgi.jpg";
 import Samyak from "../../Assets/Team/Samyak.jpg";
@@ -51,7 +51,7 @@ const team = [
   },
   {
     name: "Saumitra Topinkatti",
-    role: "Backend Developer",
+    role: "Full Stack Developer",
     image: SBT,
     linkedin:
       "https://in.linkedin.com/in/saumitra-topinkatti-45a577208?trk=public_profile_browsemap",

@@ -145,7 +145,7 @@ const HomePage = () => (
         {/* </Link> */}
       </div>
 
-      <div className="flex items-center justify-center relative -top-10">
+      <div className="flex items-center justify-center relative -top-10 overflow-x-hidden">
         <NavButton text="Developers" url="/dev-team" imgUrl={seven} />
       </div>
     </nav>
