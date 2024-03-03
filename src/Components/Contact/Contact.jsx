@@ -1,5 +1,6 @@
 import π from "../../Assets/Team/π.jpg";
 import Vinayak from "../../Assets/Team/Vinayak.jpg";
+import SumitNaik from "../../Assets/Team/Sumit_Naik.jpg";
 import Raj from "../../Assets/Team/Raj.jpg";
 import Vaishnavi from "../../Assets/Team/VK.jpg";
 import Sanjitha from "../../Assets/Team/S3.jpg";
@@ -18,7 +19,7 @@ const council = [
   {
     name: "Sumit Naik",
     role: "General Secretary",
-    image: Vinayak,
+    image: SumitNaik,
     phone: 8971061720,
   },
   {
