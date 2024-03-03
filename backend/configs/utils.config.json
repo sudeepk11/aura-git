@@ -23,7 +23,7 @@
     }
   },
   "aura.id": {
-    "prefix": "AURA23",
+    "prefix": "AURA24",
     "delimiter": "-",
     "name.length": 3,
     "suffix.digits.length": 5

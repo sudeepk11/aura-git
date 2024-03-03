@@ -12,6 +12,7 @@ const { errorHandler } = require("../utils/utils");
 // Body
 // Create a new team
 module.exports.createTeam = async (req, res, next) => {
+  console.log("Working ");
   if (!res.locals.user) return res.status(401).send(Response(errors[401].authRequired));
 
   try {
@@ -136,30 +137,20 @@ module.exports.createTeamNoAuth = async (req, res, next) => {
   try {
     const { body } = req;
 
-    let {
-      event_participated = undefined,
-      team_name = undefined,
-      team_members = [],
-      transaction_id = undefined
-    } = body;
+    let { event_participated = undefined, team_name = undefined, team_members = [], transaction_id = undefined } = body;
 
     // Check if all fields are provided
-    if (event_participated === undefined)
-      return res.status(400).send(Response(errors[400].eventDetailsRequired));
-    if (team_name === undefined)
-      return res.status(400).send(Response(errors[400].teamNameRequired));
-    if (team_members.length === 0)
-      return res.status(400).send(Response(errors[400].minTeamCount));
-    if (transaction_id === undefined)
-      return res.status(400).send(Response(errors[400].transactionIdRequired));
+    if (event_participated === undefined) return res.status(400).send(Response(errors[400].eventDetailsRequired));
+    if (team_name === undefined) return res.status(400).send(Response(errors[400].teamNameRequired));
+    if (team_members.length === 0) return res.status(400).send(Response(errors[400].minTeamCount));
+    if (transaction_id === undefined) return res.status(400).send(Response(errors[400].transactionIdRequired));
 
     // Check if id is provided
     if (!("id" in event_participated)) return res.status(400).send(Response(errors[400].eventDetailsRequired));
     event_participated.event_id = event_participated.id;
     event_participated.event_title = event_participated.title;
 
-    if (!/^[a-z0-9-]+$/i.test(transaction_id))
-      return res.status(400).send(Response(errors[400].invalidTransactionId));
+    if (!/^[a-z0-9-]+$/i.test(transaction_id)) return res.status(400).send(Response(errors[400].invalidTransactionId));
 
     // Validate event details
     const event = await Event.findById(event_participated.event_id);
@@ -184,7 +175,7 @@ module.exports.createTeamNoAuth = async (req, res, next) => {
     if (team_members.length < event.min_team_size - 1) return res.status(400).send(Response(errors[400].minTeamCount));
 
     // Trim length to max. allowed team size
-    if (team_members.length > event.team_size) team_members = team_members.slice(0, event.team_size).filter(val => !!val);
+    if (team_members.length > event.team_size) team_members = team_members.slice(0, event.team_size).filter((val) => !!val);
 
     // Check if all team members have their email addresses verified
     if (team_members.find((member) => member.email_verified === false))
@@ -281,7 +272,7 @@ module.exports.createTeamNoAuth = async (req, res, next) => {
             status: true,
             receipt_id: receipt._id,
           },
-        }
+        },
       },
     });
     if (results2.modifiedCount === 0) {
@@ -320,26 +311,23 @@ module.exports.fetchAll = async (req, res, next) => {
 
     // Disable regex quoting
 
-    if (typeof paymentStatus === "string")
-      paymentStatus = paymentStatus.toLowerCase() === "true";
+    if (typeof paymentStatus === "string") paymentStatus = paymentStatus.toLowerCase() === "true";
 
     const find_query = {};
-    if (eventId)
-      find_query["event_participated.event_id"] = new mongoose.Types.ObjectId(eventId);
-    if (teamName)
-      find_query.team_name = { $regex: teamName, $options: "i" };
+    if (eventId) find_query["event_participated.event_id"] = new mongoose.Types.ObjectId(eventId);
+    if (teamName) find_query.team_name = { $regex: teamName, $options: "i" };
     if (teamMemberAuraId)
       find_query.$or = [
         {
           "team_leader.aura_id": { $regex: teamMemberAuraId, $options: "i" },
         },
         {
-          "team_members": {
+          team_members: {
             $elemMatch: {
-              "aura_id": { $regex: teamMemberAuraId, $options: "i" },
+              aura_id: { $regex: teamMemberAuraId, $options: "i" },
             },
           },
-        }
+        },
       ];
 
     if (typeof pageSize === "string") pageSize = parseInt(pageSize, 10);
@@ -350,53 +338,69 @@ module.exports.fetchAll = async (req, res, next) => {
     if (paymentStatus === undefined) {
       // Should display all teams
       aggregate = [
-        ...(Object.keys(find_query).length > 0 ? [{
-          "$match": find_query,
-        }] : []), {
-          "$sort": {
-            "updatedAt": -1
-          }
-        }, {
-          "$match": {
-            "updatedAt": {
-              "$lte": new Date(paginationTs)
-            }
-          }
-        }, {
-          "$limit": pageSize + 1
-        }
+        ...(Object.keys(find_query).length > 0
+          ? [
+              {
+                $match: find_query,
+              },
+            ]
+          : []),
+        {
+          $sort: {
+            updatedAt: -1,
+          },
+        },
+        {
+          $match: {
+            updatedAt: {
+              $lte: new Date(paginationTs),
+            },
+          },
+        },
+        {
+          $limit: pageSize + 1,
+        },
       ];
     } else {
       // Show teams based on the payment status criteria
       aggregate = [
-        ...(Object.keys(find_query).length > 0 ? [{
-          "$match": find_query,
-        }] : []), {
-          "$lookup": {
-            "from": "receipts",
-            "localField": "_id",
-            "foreignField": "team",
-            "as": "receipt"
-          }
-        }, {
-          "$match": {
+        ...(Object.keys(find_query).length > 0
+          ? [
+              {
+                $match: find_query,
+              },
+            ]
+          : []),
+        {
+          $lookup: {
+            from: "receipts",
+            localField: "_id",
+            foreignField: "team",
+            as: "receipt",
+          },
+        },
+        {
+          $match: {
             "receipt.0": {
-              "$exists": !!paymentStatus
-            }
-          }
-        }, {
-          "$sort": {
-            "updatedAt": -1
-          }
-        }, {
-          "$match": {
-            "updatedAt": {
-              "$lte": new Date(paginationTs)
-            }
-          }
-        }, {
-          "$limit": pageSize + 1
-        }
+              $exists: !!paymentStatus,
+            },
+          },
+        },
+        {
+          $sort: {
+            updatedAt: -1,
+          },
+        },
+        {
+          $match: {
+            updatedAt: {
+              $lte: new Date(paginationTs),
+            },
+          },
+        },
+        {
+          $limit: pageSize + 1,
+        },
       ];
     }
 
@@ -420,10 +424,7 @@ module.exports.fetchPaidTeamsByEvent = async (req, res, next) => {
     const { params, query } = req;
 
     const { id } = params;
-    let {
-      pageSize = queryConfig["search.pagination"]["page.size"],
-      paginationTs = Date.now(),
-    } = query;
+    let { pageSize = queryConfig["search.pagination"]["page.size"], paginationTs = Date.now() } = query;
     pageSize = parseInt(pageSize, 10);
     paginationTs = parseInt(paginationTs, 10);
 
@@ -433,40 +434,43 @@ module.exports.fetchPaidTeamsByEvent = async (req, res, next) => {
 
     const aggregationQuery = [
       {
-        "$lookup": {
-          "from": "teams",
-          "localField": "team",
-          "foreignField": "_id",
-          "as": "team"
-        }
-      }, {
-        "$set": {
-          "team_doc": {
-            "$arrayElemAt": [
-              "$team", 0
-            ],
-          }
-        }
-      }, {
-        "$match": {
+        $lookup: {
+          from: "teams",
+          localField: "team",
+          foreignField: "_id",
+          as: "team",
+        },
+      },
+      {
+        $set: {
+          team_doc: {
+            $arrayElemAt: ["$team", 0],
+          },
+        },
+      },
+      {
+        $match: {
           "team_doc.event_participated.event_id": new mongoose.Types.ObjectId(id),
           "team_doc.updatedAt": {
-            "$lte": new Date(paginationTs)
-          }
-        }
-      }, {
-        "$project": {
-          "team_doc": 1
-        }
-      }, {
-        "$sort": {
-          "team_doc.updatedAt": -1
-        }
-      }, {
-        "$limit": pageSize + 1,
-      }
+            $lte: new Date(paginationTs),
+          },
+        },
+      },
+      {
+        $project: {
+          team_doc: 1,
+        },
+      },
+      {
+        $sort: {
+          "team_doc.updatedAt": -1,
+        },
+      },
+      {
+        $limit: pageSize + 1,
+      },
     ];
-    const teams = await (await Receipt.aggregate(aggregationQuery)).map(doc => doc.team_doc);
+    const teams = await (await Receipt.aggregate(aggregationQuery)).map((doc) => doc.team_doc);
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.pageSize = pageSize;
@@ -486,10 +490,7 @@ module.exports.fetchUnpaidTeamsByEvent = async (req, res, next) => {
     const { params, query } = req;
 
     const { id } = params;
-    let {
-      pageSize = queryConfig["search.pagination"]["page.size"],
-      paginationTs = Date.now(),
-    } = query;
+    let { pageSize = queryConfig["search.pagination"]["page.size"], paginationTs = Date.now() } = query;
     pageSize = parseInt(pageSize, 10);
     paginationTs = parseInt(paginationTs, 10);
 
@@ -499,37 +500,43 @@ module.exports.fetchUnpaidTeamsByEvent = async (req, res, next) => {
 
     const aggregationQuery = [
       {
-        "$match": {
-          "event_participated.event_id": new mongoose.Types.ObjectId(id)
-        }
-      }, {
-        "$lookup": {
-          "from": "receipts",
-          "localField": "_id",
-          "foreignField": "team",
-          "as": "_receipt"
-        }
-      }, {
-        "$match": {
+        $match: {
+          "event_participated.event_id": new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "_id",
+          foreignField: "team",
+          as: "_receipt",
+        },
+      },
+      {
+        $match: {
           "_receipt.0": {
-            "$exists": false
-          }
-        }
-      }, {
-        "$sort": {
-          "updatedAt": -1
-        }
-      }, {
-        "$match": {
-          "updatedAt": {
-            "$lte": new Date(paginationTs)
-          }
-        }
-      }, {
-        "$limit": pageSize + 1
-      }, {
-        "$unset": "_receipt"
-      }
+            $exists: false,
+          },
+        },
+      },
+      {
+        $sort: {
+          updatedAt: -1,
+        },
+      },
+      {
+        $match: {
+          updatedAt: {
+            $lte: new Date(paginationTs),
+          },
+        },
+      },
+      {
+        $limit: pageSize + 1,
+      },
+      {
+        $unset: "_receipt",
+      },
     ];
     const teams = await Team.aggregate(aggregationQuery);
 
@@ -584,8 +591,8 @@ module.exports.fetchByEvent = async (req, res, next) => {
       "event_participated.event_id": id,
       ...(user_id !== undefined
         ? {
-          "team_leader.id": user_id,
-        }
+            "team_leader.id": user_id,
+          }
         : {}),
       updatedAt: { $lte: paginationTs },
     })
@@ -611,10 +618,7 @@ module.exports.fetchCompleteByEvent = async (req, res, next) => {
     const { params, query } = req;
 
     const { id } = params;
-    let {
-      pageSize = queryConfig["search.pagination"]["page.size"],
-      paginationTs = Date.now(),
-    } = query;
+    let { pageSize = queryConfig["search.pagination"]["page.size"], paginationTs = Date.now() } = query;
     pageSize = parseInt(pageSize, 10);
     paginationTs = parseInt(paginationTs, 10);
 
@@ -624,71 +628,74 @@ module.exports.fetchCompleteByEvent = async (req, res, next) => {
 
     const aggregationQuery = [
       {
-        "$match": {
-          "event_participated.event_id": new mongoose.Types.ObjectId(id)
-        }
-      }, {
-        "$sort": {
-          "updatedAt": -1
-        }
-      }, {
-        "$match": {
-          "updatedAt": {
-            "$lte": new Date(paginationTs)
-          }
-        }
-      }, {
-        "$limit": 21
-      }, {
-        "$lookup": {
-          "from": "users",
-          "localField": "team_leader.id",
-          "foreignField": "_id",
-          "as": "team_leader._doc"
-        }
-      }, {
-        "$set": {
-          "team_leader_doc": {
-            "$arrayElemAt": [
-              "$team_leader._doc", 0
-            ]
-          }
-        }
-      }, {
-        "$lookup": {
-          "from": "users",
-          "localField": "team_members.id",
-          "foreignField": "_id",
-          "as": "team_members_docs"
-        }
-      }, {
-        "$lookup": {
-          "from": "receipts",
-          "localField": "_id",
-          "foreignField": "team",
-          "as": "receipt_doc"
-        }
-      }, {
-        "$set": {
-          "receipt": {
-            "$cond": [
+        $match: {
+          "event_participated.event_id": new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $sort: {
+          updatedAt: -1,
+        },
+      },
+      {
+        $match: {
+          updatedAt: {
+            $lte: new Date(paginationTs),
+          },
+        },
+      },
+      {
+        $limit: 21,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "team_leader.id",
+          foreignField: "_id",
+          as: "team_leader._doc",
+        },
+      },
+      {
+        $set: {
+          team_leader_doc: {
+            $arrayElemAt: ["$team_leader._doc", 0],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "team_members.id",
+          foreignField: "_id",
+          as: "team_members_docs",
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "_id",
+          foreignField: "team",
+          as: "receipt_doc",
+        },
+      },
+      {
+        $set: {
+          receipt: {
+            $cond: [
               {
-                "$eq": [
-                  "$receipt_doc.0", null
-                ]
-              }, null, {
-                "$arrayElemAt": [
-                  "$receipt_doc", 0
-                ]
-              }
-            ]
-          }
-        }
-      }, {
-        "$unset": [
-          "_doc", "receipt_doc", "team_leader", "team_members"
-        ]
-      }
+                $eq: ["$receipt_doc.0", null],
+              },
+              null,
+              {
+                $arrayElemAt: ["$receipt_doc", 0],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $unset: ["_doc", "receipt_doc", "team_leader", "team_members"],
+      },
     ];
     const teams = await Team.aggregate(aggregationQuery);
 
@@ -730,8 +737,8 @@ module.exports.fetchByUser = async (req, res, next) => {
       ],
       ...(event_id !== undefined
         ? {
-          "event_participated.event_id": event_id,
-        }
+            "event_participated.event_id": event_id,
+          }
         : {}),
       updatedAt: { $lte: paginationTs },
     })
@@ -755,30 +762,32 @@ module.exports.statsPaidTeams = async (req, res, next) => {
   try {
     const aggregationQuery = [
       {
-        "$project": {
-          "_id": 1
-        }
-      }, {
-        "$lookup": {
-          "from": "receipts",
-          "localField": "_id",
-          "foreignField": "team",
-          "as": "_receipt"
-        }
-      }, {
-        "$match": {
+        $project: {
+          _id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "_id",
+          foreignField: "team",
+          as: "_receipt",
+        },
+      },
+      {
+        $match: {
           "_receipt.0": {
-            "$exists": true
-          }
-        }
-      }, {
-        "$count": "paid_teams_count"
-      }
+            $exists: true,
+          },
+        },
+      },
+      {
+        $count: "paid_teams_count",
+      },
     ];
     const result = await Team.aggregate(aggregationQuery);
 
-    if (!res.locals.data)
-      res.locals.data = {};
+    if (!res.locals.data) res.locals.data = {};
     res.locals.data.result = result;
   } catch (error) {
     const { status, message } = errorHandler(error);
@@ -792,40 +801,42 @@ module.exports.statsUnpaidTeams = async (req, res, next) => {
   try {
     const aggregationQuery = [
       {
-        "$project": {
-          "_id": 1
-        }
-      }, {
-        "$lookup": {
-          "from": "receipts",
-          "localField": "_id",
-          "foreignField": "team",
-          "as": "receipt"
-        }
-      }, {
-        "$set": {
-          "receipt_doc": {
-            "$arrayElemAt": [
-              "$receipt", 0
-            ]
-          }
-        }
-      }, {
-        "$unset": "receipt"
-      }, {
-        "$match": {
-          "receipt_doc": {
-            "$eq": null
-          }
-        }
-      }, {
-        "$count": "unpaid_teams_count"
-      }
+        $project: {
+          _id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "_id",
+          foreignField: "team",
+          as: "receipt",
+        },
+      },
+      {
+        $set: {
+          receipt_doc: {
+            $arrayElemAt: ["$receipt", 0],
+          },
+        },
+      },
+      {
+        $unset: "receipt",
+      },
+      {
+        $match: {
+          receipt_doc: {
+            $eq: null,
+          },
+        },
+      },
+      {
+        $count: "unpaid_teams_count",
+      },
     ];
     const result = await Team.aggregate(aggregationQuery);
 
-    if (!res.locals.data)
-      res.locals.data = {};
+    if (!res.locals.data) res.locals.data = {};
     res.locals.data.result = result;
   } catch (error) {
     const { status, message } = errorHandler(error);
