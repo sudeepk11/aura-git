@@ -35,6 +35,68 @@ function parseLinks(strings) {
   });
 }
 
+function getRegistrationFeesForEvent(event) {
+  const maxTeamSize = event.team_size;
+  const minTeamSize = event.min_team_size;
+
+  const canParticipateSolo = minTeamSize <= 1;
+  const canParticipateWithTeamOf2 = maxTeamSize >= 2 && minTeamSize <= 2;
+  const canParticipateWithTeamOf2To4 = maxTeamSize >= 4 && minTeamSize <= 4;
+  const canParticipateWithTeamOfMoreThan4 = maxTeamSize > 4;
+
+  return (
+    <>
+      <h2 className="text-2xl font-bold text-center mb-5">
+        Registration Fees
+      </h2>
+      {
+        canParticipateSolo &&
+        <>
+          <h2 className="text-xl text-center">
+            Team of One
+          </h2>
+          <p className="w-fit text-primary text-2xl text-center my-5 rounded-full py-2 px-5 border-2 border-primary bg-transparent mx-auto">
+            &#8377; 99
+          </p>
+        </>
+      }
+      {
+        canParticipateWithTeamOf2 &&
+        <>
+          <h2 className="text-xl text-center">
+            Team of 2
+          </h2>
+          <p className="w-fit text-primary text-2xl text-center my-5 rounded-full py-2 px-5 border-2 border-primary bg-transparent mx-auto">
+            &#8377; 199
+          </p>
+        </>
+      }
+      {
+        canParticipateWithTeamOf2To4 &&
+        <>
+          <h2 className="text-xl text-center">
+            Team of 2-4
+          </h2>
+          <p className="w-fit text-primary text-2xl text-center my-5 rounded-full py-2 px-5 border-2 border-primary bg-transparent mx-auto">
+            &#8377; 299
+          </p>
+        </>
+      }
+      {
+        canParticipateWithTeamOfMoreThan4 &&
+        <>
+          <h2 className="text-xl text-center">
+            Team of 4+
+          </h2>
+          <p className="w-fit text-primary text-2xl text-center my-5 rounded-full py-2 px-5 border-2 border-primary bg-transparent mx-auto">
+            &#8377; 399
+          </p>
+        </>
+      }
+    </>
+  );
+}
+
 const EventDetails = ({ event }) => {
   const rules = parseLinks(event.rules);
   return (
@@ -88,12 +150,7 @@ const EventDetails = ({ event }) => {
           ))}
         </ul>
       </div>
-      <h2 className="text-2xl font-bold text-center">
-        {event.team_size > 1 ? "Team" : "Individual"} Registration Fees
-      </h2>
-      <p className="w-fit text-white text-2xl text-center my-5 rounded-full py-2 px-5 bg-primary mx-auto">
-        &#8377; {event.team_size > 1 ? "250" : "50"}
-      </p>
+      {getRegistrationFeesForEvent(event)}
     </div>
   );
 };
