@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "host": "https://aura.git.edu",
-=======
-  "host": "http://localhost:3000",
->>>>>>> pre-release
   "dev_host": "http://localhost:3000",
   "name": "Aura 24",
   "emails": {
