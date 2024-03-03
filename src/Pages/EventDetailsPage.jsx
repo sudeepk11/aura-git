@@ -168,6 +168,7 @@ const EventsDetailsPage = () => {
               setIsLeader={setIsLeader}
               team={team}
               isInvalidTeam={inValidTeam}
+              whatsappGroup={event?.whatsapp_group}
               className="justify-center justify-self-center w-4 mb-12"
             />
           )}

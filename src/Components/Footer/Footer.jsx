@@ -5,7 +5,7 @@ import {
   // faTwitter,
   // faLinkedin,
 } from "@fortawesome/free-brands-svg-icons";
-import logo from "../../Assets/logo.png";
+import logo from "../../Assets/logo_new.png";
 
 export const Footer = () => {
   return (
@@ -67,8 +67,11 @@ export const Footer = () => {
             >
               Udyambag Industrial Area, Udyambag, Belagavi, Karnataka 590006
             </a>
-            <a className="my-3 block" href="mailto:aura23.klsgit@gmail.com">
-              aura23.klsgit@gmail.com
+            <a
+              className="my-3 block"
+              href="mailto:klsgit.aura.official@outlook.com"
+            >
+              klsgit.aura.official@outlook.com
             </a>
           </div>
         </div>
@@ -103,7 +106,7 @@ export const Footer = () => {
               <FontAwesomeIcon icon={faLinkedin} className="text-xl" />
             </a> */}
           </div>
-          <div className="my-5">© Copyright 2023. All Rights Reserved.</div>
+          <div className="my-5">© Copyright 2024. All Rights Reserved.</div>
         </div>
       </div>
     </footer>

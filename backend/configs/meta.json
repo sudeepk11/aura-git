@@ -1,7 +1,11 @@
 {
+<<<<<<< HEAD
   "host": "https://aura.git.edu",
+=======
+  "host": "http://localhost:3000",
+>>>>>>> pre-release
   "dev_host": "http://localhost:3000",
-  "name": "Aura 23",
+  "name": "Aura 24",
   "emails": {
     "primary": "aura23.klsgit@gmail.com",
     "reply_email": "aura23.klsgit@gmail.com"

@@ -1,4 +1,5 @@
-import Venki from "../../Assets/Team/Venki.jpg";
+import Kiran from "../../Assets/Team/Kiran.jpg";
+import Sudeep from "../../Assets/Team/Sudeep.jpg";
 import Piyush from "../../Assets/Team/π.jpg";
 import SBT from "../../Assets/Team/SBT.jpg";
 import Parishkar from "../../Assets/Team/Parishkar.jpg";
@@ -17,16 +18,24 @@ import {
 
 const team = [
   {
-    name: "Venkatesh Dhongadi",
+    name: "Sudeep Kulkarni",
     role: "Co-Ordinator",
-    image: Venki,
-    linkedin: "https://in.linkedin.com/in/venkatesh-dhongadi-ba2904187",
-    instagram: "https://www.instagram.com/flick_23/",
-    github: "https://github.com/flick-23",
+    image: Sudeep,
+    linkedin: "https://www.linkedin.com/in/sudeep-kulkarni-2764a366/",
+    instagram: "#",
+    github: "https://github.com/sudeepk11",
+  },
+  {
+    name: "Kiran Potdar",
+    role: "Lead Full Stack Developer",
+    image: Kiran,
+    linkedin: "https://www.linkedin.com/in/kiran-potdar-50707b238/",
+    instagram: "#",
+    github: "https://github.com/KirPot05",
   },
   {
     name: "Piyush Airani",
-    role: "Co-Ordinator",
+    role: "Full Stack Developer",
     image: Piyush,
     linkedin: "https://in.linkedin.com/in/piyush-airani",
     instagram: "https://www.instagram.com/pi_22by7/",
@@ -90,7 +99,7 @@ const team = [
 
 const DevTeam = () => {
   return (
-    <div className="py-10 bg-contactus bg-cover">
+    <div className="py-10 bg-devTeam bg-cover">
       <h2 className="text-2xl font-bold text-center">Dev Team</h2>
       <div className="grid md:grid-cols-4 grid-cols-1 my-5">
         {team.map((member) => (

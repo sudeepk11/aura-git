@@ -1,8 +1,8 @@
 import { useState } from "react";
-import day0 from "../../Assets/Schedule/1.png";
-import day1 from "../../Assets/Schedule/2.png";
-import day2 from "../../Assets/Schedule/3.png";
-import day3 from "../../Assets/Schedule/4.png";
+import day0 from "../../Assets/coming_soon/1.svg";
+import day1 from "../../Assets/coming_soon//2.svg";
+import day2 from "../../Assets/coming_soon/3.svg";
+import day3 from "../../Assets/coming_soon/4.svg";
 
 const Schedule = () => {
   const [day, setDay] = useState(0);
@@ -71,39 +71,43 @@ const Schedule = () => {
             <img
               src={day0}
               alt="Day 0 Schedule"
-              className="md:w-full md:h-auto h-2/3 w-[180%] max-w-none"
+              className="md:w-full md:h-[80vh] h-80 max-w-none"
             />
           )}
           {day == 1 && (
             <img
               src={day1}
               alt="Day 1 Schedule"
-              className="md:w-full md:h-auto h-2/3 w-[180%] max-w-none"
+              className="md:w-full md:h-[80vh] h-80 max-w-none"
             />
           )}
           {day == 2 && (
             <img
               src={day2}
               alt="Day 2 Schedule"
-              className="md:w-full md:h-auto h-2/3 w-[180%] max-w-none"
+              className="md:w-full md:h-[80vh] h-80 max-w-none"
             />
           )}
           {day == 3 && (
             <img
               src={day3}
               alt="Day 3 Schedule"
-              className="md:w-full md:h-auto h-2/3 w-[180%] max-w-none"
+              className="md:w-full md:h-[80vh] h-80 max-w-none"
             />
           )}
         </div>
-        <div className="w-full text-center">
+        {/* <div className="flex items-center justify-center h-[50vh] bg-white rounded-md mx-4 md:mx-0">
+          <p className="z-10 text-3xl font-semibold">Coming Soon...!</p>
+        </div> */}
+
+        {/* <div className="w-full text-center">
           <a
             href="https://drive.google.com/uc?export=download&id=15FbFuJGSD_SUTKCk68ynZIRNPbMMvgRt"
             rel="noreferrer"
           >
             <button className="btn btn-primary">Download Schedule</button>
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );

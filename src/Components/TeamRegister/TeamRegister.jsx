@@ -427,7 +427,7 @@ const TeamRegister = (props) => {
             <h1 className="font-bold text-xl text-center m-2">
               You have Successfully Registered for the Event 😎!
             </h1>
-            <p className="text-center text-sm text-blue-600">
+            {/* <p className="text-center text-sm text-blue-600">
               Please make sure that you have filled the form after completing
               your payment for this event (
               <a
@@ -438,7 +438,15 @@ const TeamRegister = (props) => {
                 https://forms.gle/BSBtcqeEYfZWqo4Y9
               </a>
               ).
+            </p> */}
+            <p className="text-center text-sm text-blue-600">
+              Please make sure that you join the Whatsapp Group
             </p>
+            <a href={props?.whatsappGroup}>
+              <p className="text-center font-semibold text-green-800">
+                {props?.whatsappGroup}
+              </p>
+            </a>
             <br />
             <p className="text-center text-sm text-blue-600">
               Your payments will be verified and in case of any fraudaulent
