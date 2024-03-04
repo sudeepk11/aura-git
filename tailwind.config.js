@@ -55,7 +55,7 @@ module.exports = {
         contactus: "url('./Assets/contactus.png')",
         rulebook: "url('./Assets/rule.png')",
         dance: "url('./Assets/Events/DANCE.png')",
-        dramatics: "url('./Assets/Events/DRAMA.png')",
+        drama: "url('./Assets/Events/DRAMA.png')",
         egaming: "url('./Assets/Events/GAMING.png')",
         fashion: "url('./Assets/Events/FASHION.png')",
         finearts: "url('./Assets/Events/FINEARTS.png')",

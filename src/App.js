@@ -20,6 +20,7 @@ import Rulebook from "./Components/Rulebook/Rulebook";
 import Schedule from "./Components/Schedule/Schedule";
 import DevTeam from "./Components/DevTeam/DevTeam";
 import Changed from "./Components/ForgotPassword/Changed";
+import ScrollToTop from "./Components/ScrollToTop/ScrollToTop";
 // import Policy from "./Components/Policy/Policy";
 // import AboutUs from "./Components/AboutUs/AboutUs";
 import News from "./Components/News/News";
@@ -45,6 +46,7 @@ function App() {
   }, [setUser]);
   return (
     <div className="App select-none">
+      <ScrollToTop />
       {path !== "/" && <NavBar />}
       <section>
         <Routes>

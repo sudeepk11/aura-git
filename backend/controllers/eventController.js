@@ -8,15 +8,22 @@ const { errorHandler } = require("../utils/utils");
 // Body
 module.exports.eventGetAllGroupedController = async (req, res, next) => {
   try {
-    const { kind = eventConfig.kinds.event } = req.query;
+    const { kind = eventConfig.kinds.event, excludeRegisteredTeams = "false" } = req.query;
     if (!Object.values(eventConfig.kinds).includes(kind)) return res.status(400).send(Response(errors[400].invalidKind));
 
     const records = await Event.aggregate([
       {
         $match: {
-          kind: kind,
+          kind,
         },
       },
+      ...(excludeRegisteredTeams === "true"
+        ? [
+            {
+              $unset: "registered_teams",
+            },
+          ]
+        : []),
       {
         $group: {
           _id: "$club",
@@ -56,10 +63,10 @@ module.exports.eventGetAllGroupedController = async (req, res, next) => {
 
 module.exports.eventGetAllController = async (req, res, next) => {
   try {
-    const { kind = eventConfig.kinds.event } = req.query;
+    const { kind = eventConfig.kinds.event, excludeRegisteredTeams = "false" } = req.query;
     if (!Object.values(eventConfig.kinds).includes(kind)) return res.status(400).send(Response(errors[400].invalidKind));
 
-    const records = await Event.find({ kind });
+    const records = await Event.find({ kind }, excludeRegisteredTeams === "true" ? "-registered_teams" : "");
 
     if (!res.locals.data) res.locals.data = {};
     if (kind === eventConfig.kinds.event) res.locals.data.events = records;
@@ -113,11 +120,12 @@ module.exports.eventGetByClubAndTitleController = async (req, res, next) => {
 
 module.exports.eventGetByIdController = async (req, res, next) => {
   try {
-    const { params } = req;
+    const { params, query } = req;
 
     const { id } = params;
+    const { excludeRegisteredTeams = "false" } = query;
 
-    const record = await Event.findById(id);
+    const record = await Event.findById(id, excludeRegisteredTeams === "true" ? "-registered_teams" : "");
     if (!record) return res.status(404).send(Response(errors[404].eventNotFound));
 
     if (!res.locals.data) res.locals.data = {};

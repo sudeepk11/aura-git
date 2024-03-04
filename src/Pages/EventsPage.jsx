@@ -95,7 +95,7 @@ const EventsPage = () => {
             <p
               key={club._id}
               data-id={club._id}
-              className={`tabs text-center text-lg rounded-full py-2 text-white font-semibold cursor-pointer
+              className={`tabs text-center text-base rounded-full py-2 text-white font-semibold cursor-pointer
               ${club._id === activeTab ? "bg-tertiary" : "bg-quaternary"}`}
               onClick={(e) => {
                 setActiveTab(club._id);
