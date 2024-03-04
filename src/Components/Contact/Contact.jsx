@@ -1,5 +1,6 @@
 import π from "../../Assets/Team/π.jpg";
 import Vinayak from "../../Assets/Team/Vinayak.jpg";
+import SumitNaik from "../../Assets/Team/Sumit_Naik.jpg";
 import Raj from "../../Assets/Team/Raj.jpg";
 import Vaishnavi from "../../Assets/Team/VK.jpg";
 import Sanjitha from "../../Assets/Team/S3.jpg";
@@ -18,7 +19,7 @@ const council = [
   {
     name: "Sumit Naik",
     role: "General Secretary",
-    image: Vinayak,
+    image: SumitNaik,
     phone: 8971061720,
   },
   {
@@ -47,7 +48,7 @@ const council = [
   },
   {
     name: "Rohan Mangalore",
-    role: "Cultural Co-Ordinator",
+    role: "Cultural Secretary",
     image: Rohan,
     // instagram: "https://www.instagram.com/jeetendrakumargarag/",
     phone: 9902799657,
@@ -55,7 +56,7 @@ const council = [
   },
   {
     name: "Philbert Dsouza",
-    role: "Technical Co-Ordinator",
+    role: "Technical Secretary",
     image: Philbert,
     // instagram: "https://www.instagram.com/_tejas_x_5/",
     phone: 9380017175,

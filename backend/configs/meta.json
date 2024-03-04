@@ -3,8 +3,8 @@
   "dev_host": "http://localhost:3000",
   "name": "Aura 24",
   "emails": {
-    "primary": "aura23.klsgit@gmail.com",
-    "reply_email": "aura23.klsgit@gmail.com"
+    "primary": "noreply.studentcouncil.aura@gmail.com",
+    "reply_email": "noreply.studentcouncil.aura@gmail.com"
   },
   "endpoints": {
     "email_verification": "/#/verifyEmail",
