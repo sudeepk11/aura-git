@@ -10,6 +10,7 @@ import {
   faCircleChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { successToast } from "../Utils/Toasts/Toasts";
+import WhatsappIcon from "../Assets/whatsapp.png";
 
 const collegesList = colleges.map((college) => (
   <option value={college.college}>{college.college}</option>
@@ -23,6 +24,7 @@ const UserPage = () => {
   const [error, setError] = useState(null);
   const [disUserEvents, setDisUserEvents] = useState(false);
   const [userEvents, setUserEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [activeTab, setActiveTab] = useState("profile");
   const [teamDropdown, setTeamDropdown] = useState({});
   const uid = localStorage.getItem("uid");
@@ -76,6 +78,27 @@ const UserPage = () => {
       });
   };
 
+  const getEventById = async (id) => {
+    try {
+      const response = await api.get(`/events/resolve/${id}?excludeRegisteredTeams=true`);
+      const responseData = response.data;
+
+      return responseData.data.event;
+    } catch (error) {
+      console.log("Sus error", error);
+    }
+  };
+
+  const getEvents = async () => {
+    const events = await Promise.all(
+      userEvents.map(async event => {
+        return getEventById(event.event_participated.event_id);
+      })
+    );
+
+    setEvents(events);
+  };
+
   const getUsersEvents = async () => {
     await api
       .get(`/teams/user/${uid}`)
@@ -118,6 +141,10 @@ const UserPage = () => {
         }
       });
   };
+
+  useEffect(() => {
+    getEvents();
+  }, [userEvents]);
 
   if (loading) {
     return <PreLoader type="loading" />;
@@ -299,7 +326,7 @@ const UserPage = () => {
             )}
             {disUserEvents &&
               userEvents.length > 0 &&
-              userEvents.map((event) => (
+              userEvents.map((event, index) => (
                 <div className="flex flex-col justify-between items-center w-full bg-white rounded-lg py-3 md:px-5 px-1 my-3">
                   <div className="flex flex-row justify-between items-center w-full">
                     <h1 className="font-semibold text-lg  md:px-0 px-1">
@@ -333,7 +360,8 @@ const UserPage = () => {
                     </button>
                   </div>
                   {teamDropdown[event._id] && (
-                    <div className="w-full mt-3 md:px-0 px-2">
+                    <>
+                      <div className="w-full mt-3 md:px-0 px-2">
                       <h3 className="font-semibold text-lg">
                         Team Name: {event.team_name}
                       </h3>
@@ -386,6 +414,22 @@ const UserPage = () => {
                         </div>
                       ))}
                     </div>
+                      {
+                        event.payment_status &&
+                        <div className="text-sm flex items-center gap-5">
+                          <FontAwesomeIcon icon="fab fa-whatsapp" />
+                          <img
+                            src={WhatsappIcon}
+                            width="20px"
+                          />
+                          <a href={events[index]?.whatsapp_group}>
+                            <p className="text-center font-semibold text-green-800">
+                              {events[index]?.whatsapp_group}
+                            </p>
+                          </a>
+                        </div>
+                      }
+                    </>
                   )}
                 </div>
               ))}
