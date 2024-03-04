@@ -205,13 +205,13 @@ const TeamRegister = (props) => {
         })
         .then((res) => {
           successToast(
-            "Your payment has been recorded. Please make sure that you also submit the form to complete your registration. https://forms.gle/L9iwR3HBoTXmbK687"
+            "Your payment has been recorded."
           );
 
-          setTimeout(
-            () => window.open("https://forms.gle/BSBtcqeEYfZWqo4Y9", "_blank"),
-            1000
-          );
+          // setTimeout(
+          //   () => window.open("https://forms.gle/BSBtcqeEYfZWqo4Y9", "_blank"),
+          //   1000
+          // );
 
           props.setPaid(true);
           setShowModal(false);
@@ -302,7 +302,7 @@ const TeamRegister = (props) => {
                     type="button"
                     onClick={() => pay()}
                   >
-                    Next (Redirects to Google Forms)
+                    Next
                   </button>
                 </div>
               </div>
