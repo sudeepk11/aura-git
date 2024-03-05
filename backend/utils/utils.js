@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const nodemailerCreateMail = ({ from = meta.name, to, subject, text = undefined, html = undefined }) => ({
+const nodemailerCreateMail = ({ from = NODEMAILER_EMAIL, to, subject, text = undefined, html = undefined }) => ({
   from,
   to,
   subject,
