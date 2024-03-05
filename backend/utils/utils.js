@@ -9,9 +9,9 @@ const { bcrypt: bcryptConfig, "aura.id": auraIdConfig } = require("../configs/ut
 const { logError } = require("./winston.util");
 
 // - `nodemailer`
-const { NODEMAILER_EMAIL, NODEMAILER_PASS } = process.env;
+const { NODEMAILER_SERVICE = "gmail", NODEMAILER_EMAIL, NODEMAILER_PASS } = process.env;
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: NODEMAILER_SERVICE,
   auth: {
     user: NODEMAILER_EMAIL,
     pass: NODEMAILER_PASS,
