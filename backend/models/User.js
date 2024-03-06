@@ -150,7 +150,10 @@ userSchema.methods.createNewTicket = async function (purpose, data = null) {
     });
 
   const emailObj = nodemailerCreateMail({ to: this.email, subject: purposeData.get(purpose).subject, html });
-  await nodemailerSendMail(emailObj);
+  if (purpose === "password_reset") {
+    // TODO: Remove conditional emailing later
+    await nodemailerSendMail(emailObj);
+  }
 
   return 2;
 };
