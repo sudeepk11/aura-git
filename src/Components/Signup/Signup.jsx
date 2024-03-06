@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { successToast } from "../../Utils/Toasts/Toasts";
 import api from "../../Utils/axios.config";
@@ -13,6 +13,8 @@ const collegesList = colleges.map((college, index) => (
 ));
 
 const Signup = () => {
+  const navigateTo = useNavigate();
+
   // eslint-disable-next-line no-unused-vars
   const [name, setName] = useState("");
   const [usn, setUsn] = useState("");
@@ -58,6 +60,7 @@ const Signup = () => {
             setCollege("");
             setUsn("");
             successToast("You have successfully signed up.");
+            setTimeout(() => navigateTo("/#/login"), 2000);
           } else {
             setLoading(false);
             setError("Something Went Wrong");
