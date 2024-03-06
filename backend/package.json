@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.2.0",
     "express-validator": "^6.14.3",
     "finalhandler": "^1.2.0",
     "http": "^0.0.1-security",
