@@ -59,8 +59,8 @@ const Signup = () => {
             setName("");
             setCollege("");
             setUsn("");
-            successToast("You have successfully signed up.");
-            setTimeout(() => navigateTo("/#/login"), 2000);
+            successToast("You have successfully signed up. You can now login.");
+            setTimeout(() => navigateTo("/login"), 1000);
           } else {
             setLoading(false);
             setError("Something Went Wrong");
