@@ -16,6 +16,7 @@
     "colorthief": "^2.4.0",
     "d3": "^7.8.2",
     "d3-geo-projection": "^4.0.0",
+    "express-rate-limit": "^7.2.0",
     "globe.gl": "^2.27.1",
     "html-react-parser": "^3.0.12",
     "promise": "^8.3.0",
