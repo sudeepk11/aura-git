@@ -7,10 +7,11 @@ const { complete } = require("../controllers/controllers");
 const authController = require("../controllers/authController");
 
 // Constants
+const { AUTH_SIGNUP_RATE_LIMIT_MAX_COUNT = 1, AUTH_SIGNUP_RATE_LIMIT_WINDOW_SIZE = 120000 } = process.env;
 const router = Router();
 const oneRequestPer2MinutesRateLimiter = rateLimit({
-  limit: 1,
-  windowMs: 2 * 60 * 1000, // 2 mins
+  limit: AUTH_SIGNUP_RATE_LIMIT_MAX_COUNT,
+  windowMs: AUTH_SIGNUP_RATE_LIMIT_WINDOW_SIZE,
   message: stdResponse("Rate limited"),
 });
 
