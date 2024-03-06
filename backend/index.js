@@ -32,3 +32,6 @@ expressApp.use("/tickets", ticketRoutes);
 expressApp.use("/receipts", receiptRoutes);
 expressApp.use("/submissions", submissionRoutes);
 expressApp.use("/news", newsRoutes);
+
+// Setup cron jobs
+require("./scripts/cron.jobs.script");
