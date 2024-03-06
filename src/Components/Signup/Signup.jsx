@@ -47,7 +47,7 @@ const Signup = () => {
         })
         .then((res) => {
           if (res.data.data.user) {
-            setMessage("A verification E-mail has been sent to your mail.");
+            // setMessage("A verification E-mail has been sent to your mail.");
             window.scrollTo(0, 0);
             setLoading(false);
             setError("");
