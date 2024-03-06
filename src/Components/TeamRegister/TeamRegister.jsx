@@ -8,9 +8,7 @@ import errors from "../../Utils/error.codes.json";
 import { redirect } from "react-router-dom";
 import payqr from "../../Assets/qr.png";
 
-function getRegistrationFeesForTeam(team) {
-  const teamSize = 1 + (team?.team_members?.length ?? 0);
-
+function getRegistrationFeesForEventTeamSize(teamSize) {
   if (teamSize === 1)
     return 99;
   if (teamSize === 2)
@@ -275,7 +273,7 @@ const TeamRegister = (props) => {
                   <p className="my-4 text-blue-600 text-md">
                     Please open your preferred payment app and please pay{" "}
                     <strong className="highlight">
-                      ₹ {getRegistrationFeesForTeam(props.team)}
+                      ₹ {getRegistrationFeesForEventTeamSize(teamSize)}
                     </strong>{" "}
                     by scanning the QR code displayed above.
                   </p>

@@ -36,13 +36,12 @@ function parseLinks(strings) {
 }
 
 function getRegistrationFeesForEvent(event) {
-  const maxTeamSize = event.team_size;
-  const minTeamSize = event.min_team_size;
+  const teamSize = event.team_size;
 
-  const canParticipateSolo = minTeamSize <= 1;
-  const canParticipateWithTeamOf2 = maxTeamSize >= 2 && minTeamSize <= 2;
-  const canParticipateWithTeamOf2To4 = maxTeamSize >= 4 && minTeamSize <= 4;
-  const canParticipateWithTeamOfMoreThan4 = maxTeamSize > 4;
+  const canParticipateSolo = teamSize === 1;
+  const canParticipateWithTeamOf2 = teamSize === 2;
+  const canParticipateWithTeamOf2To4 = teamSize > 2 && teamSize <= 4;
+  const canParticipateWithTeamOfMoreThan4 = teamSize > 4;
 
   return (
     <>
