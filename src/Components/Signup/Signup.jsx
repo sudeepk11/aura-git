@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { successToast } from "../../Utils/Toasts/Toasts";
+import { successToast, errorToast } from "../../Utils/Toasts/Toasts";
 import api from "../../Utils/axios.config";
 import colleges from "../../Dataset/collegesKar.json";
 
@@ -78,6 +78,8 @@ const Signup = () => {
         error.response.data.error === "403-emailAlreadyInUse"
       ) {
         setError("Email Already In Use");
+      } else if (error.response.status === 429) {
+        errorToast("You have been rate limited. Please try again later.");
       } else {
         setError("Something Went Wrong");
       }
