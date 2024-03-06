@@ -29,7 +29,7 @@ const Login = () => {
       .get(`/tickets/verification/email?email=${email}`)
       .then((res) => {
         if (res.data.success)
-          setMessage("A verification E-mail has been sent to your mail.");
+          setMessage("A verification E-mail has been sent to your mail. Kindly check your spam folder as well!");
       })
       .catch((err) => {
         if (
