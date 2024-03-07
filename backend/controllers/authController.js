@@ -5,6 +5,7 @@ const ticketConfig = require("../configs/ticket.config.json");
 const User = require("../models/User");
 const Response = require("../models/standard.response.model");
 const { bcryptHash, errorHandler } = require("../utils/utils");
+const { verifyCaptchaToken } = require("../utils/captcha.util");
 
 // Constants
 const errorMessages = Object.freeze({
@@ -36,6 +37,8 @@ module.exports.signup_post = async (req, res, next) => {
       usn = undefined,
       college = undefined,
       password = undefined,
+      token = undefined,
+      userIP = undefined,
     } = req.body;
 
     if (name === undefined) return res.status(400).send(Response(errors[400].nameRequired));
@@ -44,6 +47,10 @@ module.exports.signup_post = async (req, res, next) => {
     if (usn === undefined) return res.status(400).send(Response(errors[400].usnRequired));
     if (college === undefined) return res.status(400).send(Response(errors[400].collegeRequired));
     if (password === undefined) return res.status(400).send(Response(errors[400].passwordRequired));
+    if (token === undefined) return res.status(400).send(Response(errors[400].captchaTokenRequired));
+    if (userIP === undefined) return res.status(400).send(Response(errors[403].userIPNotReceived));
+
+    await verifyCaptchaToken(token, userIP);
 
     const user = await User.create({
       name,

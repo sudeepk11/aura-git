@@ -3,6 +3,7 @@ import { useState } from "react";
 import { successToast } from "../../Utils/Toasts/Toasts";
 import api from "../../Utils/axios.config";
 import colleges from "../../Dataset/collegesKar.json";
+import { getUserIPInfo } from "../../Utils/ip.config";
 
 const collegesList = colleges.map((college, index) => (
   <option key={index} value={college.college}>
@@ -23,7 +24,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password || !name || !usn || !college || !phone) {
       setError("Please enter all fields");
@@ -31,38 +32,65 @@ const Signup = () => {
     }
     setError("");
     setLoading(true);
-    handleSignUp();
+
+    try {
+      const userIPInfo = await getUserIPInfo();
+      if (userIPInfo === undefined)
+        throw new Error("Signup failed. Please try after sometime.");
+
+      grecaptcha.ready(function () {
+        grecaptcha
+          .execute("6Lfwz48pAAAAAPKkSOzxtJJJdKZJx617gzQ5dri4", {
+            action: "submit",
+          })
+          .then(function (token) {
+            // Add your logic to submit to your backend server here.
+
+            handleSignUp(token, userIPInfo.ip);
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      });
+    } catch (error) {
+      console.error(error);
+      alert(error?.message);
+    }
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (token, userIP) => {
     try {
-      await api
-        .post("/auth/user/signup", {
-          name,
-          phone,
-          email,
-          password,
-          usn,
-          college,
-        })
-        .then((res) => {
-          if (res.data.data.user) {
-            setMessage("A verification E-mail has been sent to your mail.");
-            window.scrollTo(0, 0);
-            setLoading(false);
-            setError("");
-            setEmail("");
-            setPhone("");
-            setPassword("");
-            setName("");
-            setCollege("");
-            setUsn("");
-            successToast("You have successfully signed up.");
-          } else {
-            setLoading(false);
-            setError("Something Went Wrong");
-          }
-        });
+      const fields = {
+        name,
+        phone,
+        email,
+        password,
+        usn,
+        college,
+      };
+
+      if (token !== undefined) fields.token = token;
+
+      if (userIP !== undefined) fields.userIP = userIP;
+
+      await api.post("/auth/user/signup", fields).then((res) => {
+        if (res.data.data.user) {
+          setMessage("A verification E-mail has been sent to your mail.");
+          window.scrollTo(0, 0);
+          setLoading(false);
+          setError("");
+          setEmail("");
+          setPhone("");
+          setPassword("");
+          setName("");
+          setCollege("");
+          setUsn("");
+          successToast("You have successfully signed up.");
+        } else {
+          setLoading(false);
+          setError("Something Went Wrong");
+        }
+      });
     } catch (error) {
       setLoading(false);
       if (
@@ -188,6 +216,17 @@ const Signup = () => {
                 placeholder="Your Password"
               />
             </div>
+
+            {/* <div className="mt-8 mb-5">
+              <button
+                class="g-recaptcha"
+                data-sitekey="reCAPTCHA_site_key"
+                data-callback="onSubmit"
+                data-action="submit"
+              >
+                Submit
+              </button>
+            </div> */}
 
             <div className="mt-8 mb-5">
               <p className="text-blue-600 text-center text-sm pb-2">

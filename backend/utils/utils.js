@@ -71,7 +71,6 @@ async function bcryptHash(s) {
 async function bcryptCompare(hash, s) {
   return bcrypt.compare(s, hash);
 }
-//
 
 module.exports = {
   nodemailerCreateMail,

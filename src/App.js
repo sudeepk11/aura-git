@@ -5,7 +5,7 @@ import api from "./Utils/axios.config";
 import { useUser } from "./Contexts/userContext";
 import { NavBar } from "./Components/Navbar/NavBar";
 import { Footer } from "./Components/Footer/Footer";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AuthAvailabel } from "./Utils/AuthCheck/AuthCheck";
 import HomePage from "./Pages/HomePage";
 import EventsPage from "./Pages/EventsPage";
@@ -24,10 +24,32 @@ import Changed from "./Components/ForgotPassword/Changed";
 // import AboutUs from "./Components/AboutUs/AboutUs";
 import News from "./Components/News/News";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserIPInfo } from "./Utils/ip.config";
+import { errorToast } from "./Utils/Toasts/Toasts";
 
 function App() {
   const { setUser } = useUser();
   const path = useLocation().pathname;
+  const navigate = useNavigate();
+
+  const handleIPCheck = async () => {
+    try {
+      const userIPInfo = await getUserIPInfo();
+      if (userIPInfo.isVpnEnabled) {
+        errorToast("Please disable VPN and reload the site.");
+
+        // Replace with some redirect
+        navigate("/");
+      }
+    } catch (err) {
+      console.error(err);
+      errorToast("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    handleIPCheck();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
