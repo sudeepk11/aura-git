@@ -40,7 +40,9 @@ const Signup = () => {
       if (userIPInfo === undefined)
         throw new Error("Signup failed. Please try after sometime.");
 
+      // eslint-disable-next-line no-undef
       grecaptcha.ready(function () {
+        // eslint-disable-next-line no-undef
         grecaptcha
           .execute("6Lfwz48pAAAAAPKkSOzxtJJJdKZJx617gzQ5dri4", {
             action: "submit",
