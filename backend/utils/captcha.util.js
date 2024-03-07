@@ -1,4 +1,5 @@
 const { logError } = require("./winston.util");
+require("dotenv").config();
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET;
 
@@ -11,17 +12,21 @@ async function verifyCaptchaToken(token, userIP) {
 
   try {
     const body = {
-      secret: RECAPTCHA_SECRET_KEY,
+      secret: "6Lfwz48pAAAAAIxpm9OBeLulSsgVk562EqZBT7eu",
       response: token,
-      remoteip: userIP,
+      // remoteip: userIP,
     };
 
     const res = await fetch(RECAPTCHA_URL, {
       method: "POST",
-      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${token}`,
     });
 
     const captchaResponse = await res.json();
+    console.log(captchaResponse);
 
     if (captchaResponse?.success === undefined) {
       throw new Error("Failed to verify captcha");
@@ -29,6 +34,7 @@ async function verifyCaptchaToken(token, userIP) {
 
     isVerified = captchaResponse.success;
   } catch (e) {
+    console.error(e);
     logError(e);
   }
 

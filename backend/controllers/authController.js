@@ -50,7 +50,8 @@ module.exports.signup_post = async (req, res, next) => {
     if (token === undefined) return res.status(400).send(Response(errors[400].captchaTokenRequired));
     if (userIP === undefined) return res.status(400).send(Response(errors[403].userIPNotReceived));
 
-    await verifyCaptchaToken(token, userIP);
+    const isVerified = await verifyCaptchaToken(token, userIP);
+    if (!isVerified) return res.status(403).send(Response("Captcha verification failed."));
 
     const user = await User.create({
       name,

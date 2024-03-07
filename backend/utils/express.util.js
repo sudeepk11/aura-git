@@ -29,8 +29,8 @@ const { PORT } = process.env;
 expressApp.use(express.json());
 expressApp.use(
   cors({
-    origin: meta.host,
-    credentials: true,
+    origin: meta.dev_host,
+    // credentials: true,
   })
 );
 expressApp.use(cookieParser());
