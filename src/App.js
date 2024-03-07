@@ -33,25 +33,6 @@ function App() {
   const path = useLocation().pathname;
   const navigate = useNavigate();
 
-  const handleIPCheck = async () => {
-    try {
-      const userIPInfo = await getUserIPInfo();
-      if (userIPInfo.isVpnEnabled) {
-        errorToast("Please disable VPN and reload the site.");
-
-        // Replace with some redirect
-        navigate("/");
-      }
-    } catch (err) {
-      console.error(err);
-      errorToast("Something went wrong");
-    }
-  };
-
-  useEffect(() => {
-    handleIPCheck();
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       await api
