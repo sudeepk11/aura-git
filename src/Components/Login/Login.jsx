@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { successToast } from "../../Utils/Toasts/Toasts";
 import { useUser } from "../../Contexts/userContext";
@@ -12,6 +12,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigateTo = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,8 +29,10 @@ const Login = () => {
     await api
       .get(`/tickets/verification/email?email=${email}`)
       .then((res) => {
-        if (res.data.success)
-          setMessage("A verification E-mail has been sent to your mail.");
+        if (res.data.success) {
+          // setMessage("A verification E-mail has been sent to your mail. Kindly check your spam folder as well!");
+          navigateTo("/#/login");
+        }
       })
       .catch((err) => {
         if (

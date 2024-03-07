@@ -8,6 +8,17 @@ import errors from "../../Utils/error.codes.json";
 import { redirect } from "react-router-dom";
 import payqr from "../../Assets/qr.png";
 
+function getRegistrationFeesForEventTeamSize(teamSize) {
+  if (teamSize === 1)
+    return 99;
+  if (teamSize === 2)
+    return 199;
+  if (teamSize <= 4)
+    return 299;
+
+  return 399;
+}
+
 const TeamRegister = (props) => {
   const [team, setTeam] = useState([]);
   const [name, setName] = useState("");
@@ -52,11 +63,11 @@ const TeamRegister = (props) => {
       setError(`Team size should be atleast ${props.min_size}`);
       return false;
     }
-    let p = /^AURA23-[A-Z]{3}-[0-9]{5}$/;
+    let p = /^AURA24-[A-Z]{3}-[0-9]{5}$/;
     for (let i = 0; i < team.length; i++) {
       if (!p.test(team[i])) {
         errorToast(
-          "One of the AURA IDs is invalid: Format is AURA23-XXX-12345"
+          "One of the AURA IDs is invalid: Format is AURA24-XXX-12345"
         );
         return false;
       }
@@ -192,13 +203,13 @@ const TeamRegister = (props) => {
         })
         .then((res) => {
           successToast(
-            "Your payment has been recorded. Please make sure that you also submit the form to complete your registration. https://forms.gle/L9iwR3HBoTXmbK687"
+            "Your payment has been recorded."
           );
 
-          setTimeout(
-            () => window.open("https://forms.gle/BSBtcqeEYfZWqo4Y9", "_blank"),
-            1000
-          );
+          // setTimeout(
+          //   () => window.open("https://forms.gle/BSBtcqeEYfZWqo4Y9", "_blank"),
+          //   1000
+          // );
 
           props.setPaid(true);
           setShowModal(false);
@@ -262,7 +273,7 @@ const TeamRegister = (props) => {
                   <p className="my-4 text-blue-600 text-md">
                     Please open your preferred payment app and please pay{" "}
                     <strong className="highlight">
-                      ₹{teamSize === 1 ? "50" : "250"}
+                      ₹ {getRegistrationFeesForEventTeamSize(teamSize)}
                     </strong>{" "}
                     by scanning the QR code displayed above.
                   </p>
@@ -289,7 +300,7 @@ const TeamRegister = (props) => {
                     type="button"
                     onClick={() => pay()}
                   >
-                    Next (Redirects to Google Forms)
+                    Next
                   </button>
                 </div>
               </div>

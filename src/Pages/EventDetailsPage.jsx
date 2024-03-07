@@ -58,7 +58,8 @@ const EventsDetailsPage = () => {
 
   useEffect(() => {
     if (event) {
-      getUsersTeams();
+      // getUsersTeams();
+      getUsersTeamsv2();
     }
   }, [event]);
 
@@ -99,6 +100,37 @@ const EventsDetailsPage = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+  const getUsersTeamsv2 = async () => {
+    const teams = [];
+    let paginationTs = null;
+
+    do {
+      try {
+        const response = await api.get(`/teams/user/${uid}${paginationTs !== null ? `?paginationTs=${paginationTs}` : ""}`);
+        const responseData = response.data;
+        const pageTeams = responseData.data.results;
+        paginationTs = responseData.data.paginationTs;
+
+        teams.push(...pageTeams);
+      } catch (error) {
+        console.error(error);
+      }
+    } while (paginationTs !== null);
+
+    teams.forEach((team) => {
+      if (team.event_participated.event_id === event._id) {
+        setTeam(team);
+        if (team !== null) {
+          setRegistered(true);
+          if (team.team_members.length + 1 < event.min_team_size)
+            setInValidTeam(true);
+          if (team.team_leader.id === uid) {
+            setIsLeader(true);
+          }
+        }
+      }
+    });
   };
 
   const getTeamSubmissions = async () => {

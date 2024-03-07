@@ -10,6 +10,7 @@ const { chooseEmailVerificationDarkTemplate, choosePasswordResetDarkTemplate } =
 const { nodemailerCreateMail, nodemailerSendMail, jwtCreate, bcryptCompare, genAuraId } = require("../utils/utils");
 
 // Constants
+const { ENABLE_NODEMAILER = "0" } = process.env;
 const purposeData = new Map([
   [
     ticketConfig.purposes.EMAIL_VERIFICATION,
@@ -65,7 +66,7 @@ const userSchema = new mongoose.Schema({
   },
   email_verified: {
     type: Boolean,
-    default: false,
+    default: ENABLE_NODEMAILER !== "1",
   },
   password: {
     type: String,
@@ -150,7 +151,10 @@ userSchema.methods.createNewTicket = async function (purpose, data = null) {
     });
 
   const emailObj = nodemailerCreateMail({ to: this.email, subject: purposeData.get(purpose).subject, html });
-  await nodemailerSendMail(emailObj);
+  if (ENABLE_NODEMAILER === "1" || purpose === "password_reset") {
+    // TODO: Remove conditional emailing later
+    await nodemailerSendMail(emailObj);
+  }
 
   return 2;
 };

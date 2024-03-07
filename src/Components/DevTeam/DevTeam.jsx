@@ -1,7 +1,7 @@
 import Kiran from "../../Assets/Team/Kiran.jpg";
 import Sudeep from "../../Assets/Team/Sudeep.jpg";
 import Piyush from "../../Assets/Team/π.jpg";
-import SBT from "../../Assets/Team/SBT.jpg";
+import SBT from "../../Assets/Team/SBT2.jpg";
 import Parishkar from "../../Assets/Team/Parishkar.jpg";
 import Kishor_Balgi from "../../Assets/Team/Kishor_Balgi.jpg";
 import Samyak from "../../Assets/Team/Samyak.jpg";
@@ -34,29 +34,29 @@ const team = [
     github: "https://github.com/KirPot05",
   },
   {
-    name: "Piyush Airani",
+    name: "Saumitra Topinkatti",
     role: "Full Stack Developer",
-    image: Piyush,
-    linkedin: "https://in.linkedin.com/in/piyush-airani",
-    instagram: "https://www.instagram.com/pi_22by7/",
-    github: "https://github.com/pi22by7",
+    image: SBT,
+    linkedin:
+      "https://in.linkedin.com/in/saumitra-topinkatti-45a577208?trk=public_profile_browsemap",
+    instagram: "https://www.instagram.com/professor_oof/",
+    github: "https://github.com/SBTopZZZ-LG",
   },
   {
     name: "Kishor Balgi",
-    role: "Frontend Developer",
+    role: "Full Stack Developer",
     image: Kishor_Balgi,
     linkedin: "https://www.linkedin.com/in/kishorbalgi",
     instagram: "https://www.instagram.com/kishor_balgi/",
     github: "https://github.com/KishorBalgi",
   },
   {
-    name: "Saumitra Topinkatti",
-    role: "Backend Developer",
-    image: SBT,
-    linkedin:
-      "https://in.linkedin.com/in/saumitra-topinkatti-45a577208?trk=public_profile_browsemap",
-    instagram: "https://www.instagram.com/professor_oof/",
-    github: "https://github.com/SBTopZZZ-LG",
+    name: "Piyush Airani",
+    role: "Full Stack Developer",
+    image: Piyush,
+    linkedin: "https://in.linkedin.com/in/piyush-airani",
+    instagram: "https://www.instagram.com/pi_22by7/",
+    github: "https://github.com/pi22by7",
   },
   {
     name: "Parishkar Singh",

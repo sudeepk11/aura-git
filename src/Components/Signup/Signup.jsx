@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { successToast } from "../../Utils/Toasts/Toasts";
+import { successToast, errorToast } from "../../Utils/Toasts/Toasts";
 import api from "../../Utils/axios.config";
 import colleges from "../../Dataset/collegesKar.json";
 import { getUserIPInfo } from "../../Utils/ip.config";
@@ -14,6 +14,8 @@ const collegesList = colleges.map((college, index) => (
 ));
 
 const Signup = () => {
+  const navigateTo = useNavigate();
+
   // eslint-disable-next-line no-unused-vars
   const [name, setName] = useState("");
   const [usn, setUsn] = useState("");
@@ -75,7 +77,7 @@ const Signup = () => {
 
       await api.post("/auth/user/signup", fields).then((res) => {
         if (res.data.data.user) {
-          setMessage("A verification E-mail has been sent to your mail.");
+          // setMessage("A verification E-mail has been sent to your mail.");
           window.scrollTo(0, 0);
           setLoading(false);
           setError("");
@@ -85,7 +87,8 @@ const Signup = () => {
           setName("");
           setCollege("");
           setUsn("");
-          successToast("You have successfully signed up.");
+          successToast("You have successfully signed up. You can now login.");
+          setTimeout(() => navigateTo("/login"), 1000);
         } else {
           setLoading(false);
           setError("Something Went Wrong");
@@ -103,6 +106,8 @@ const Signup = () => {
         error.response.data.error === "403-emailAlreadyInUse"
       ) {
         setError("Email Already In Use");
+      } else if (error.response.status === 429) {
+        errorToast("You have been rate limited. Please try again later.");
       } else {
         setError("Something Went Wrong");
       }
