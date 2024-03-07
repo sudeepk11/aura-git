@@ -11,12 +11,6 @@ async function verifyCaptchaToken(token, userIP) {
   if (token === undefined || String(token).trim() === "") return (isVerified = true);
 
   try {
-    const body = {
-      secret: "6Lfwz48pAAAAAIxpm9OBeLulSsgVk562EqZBT7eu",
-      response: token,
-      // remoteip: userIP,
-    };
-
     const res = await fetch(RECAPTCHA_URL, {
       method: "POST",
       headers: {
@@ -26,8 +20,6 @@ async function verifyCaptchaToken(token, userIP) {
     });
 
     const captchaResponse = await res.json();
-    console.log(captchaResponse);
-
     if (captchaResponse?.success === undefined) {
       throw new Error("Failed to verify captcha");
     }
