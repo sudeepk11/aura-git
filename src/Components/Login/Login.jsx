@@ -53,6 +53,9 @@ const Login = () => {
           password,
         })
         .then((res) => {
+          const token = res.data.data.token;
+          localStorage.setItem("access_token", token);
+
           localStorage.setItem("uid", res.data.data.user._id);
           setUser(res.data.data.user);
           setLoading(false);

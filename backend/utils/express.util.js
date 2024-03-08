@@ -29,7 +29,7 @@ const { PORT } = process.env;
 expressApp.use(express.json());
 expressApp.use(
   cors({
-    origin: meta.host,
+    origin: "https://aura-git-oh9q.onrender.com",
     credentials: true,
   })
 );

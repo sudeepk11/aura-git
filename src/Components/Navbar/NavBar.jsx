@@ -103,6 +103,7 @@ export const NavBar = () => {
               onClick={async () => {
                 setUser(null);
                 localStorage.removeItem("uid");
+                localStorage.removeItem("access_token");
                 await api.get("/auth/user/logout");
               }}
               to="/"

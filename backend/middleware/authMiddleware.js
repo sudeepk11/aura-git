@@ -7,7 +7,8 @@ const { jwtDecoded, errorHandler } = require("../utils/utils");
 
 // Body
 async function requireAuth(req, res, next) {
-  const token = req.cookies.jwt;
+  let token = req.cookies.jwt;
+  if (!token) token = req.headers.authorization;
 
   if (!token) return res.status(401).send(Response(errors[401].authRequired));
 

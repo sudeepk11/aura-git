@@ -89,7 +89,7 @@ module.exports.login_post = async (req, res, next) => {
       sameSite: "none",
       maxAge: jwtConfig.ages.login * 1000,
     });
-    if (!res.locals.data) res.locals.data = {};
+    if (!res.locals.data) res.locals.data = { token };
     res.locals.data.user = await User.findById(user._id, "-password");
   } catch (error) {
     const { status, message } = errorHandler(error);
