@@ -31,7 +31,6 @@ const Login = () => {
       .then((res) => {
         if (res.data.success) {
           setMessage("A verification E-mail has been sent to your mail. Kindly check your spam folder as well!");
-          navigateTo("/#/login");
         }
       })
       .catch((err) => {
