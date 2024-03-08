@@ -25,6 +25,11 @@ const EventsPage = () => {
       "top-right",
       5000
     );
+    messageToast(
+      "Please bring a passport-size photo to the registration desk on the event day. It's required for your ID card to be valid.",
+      "top-right",
+      5000
+    );
     async function fetchEvents() {
       try {
         const response = await api.get("/events");
