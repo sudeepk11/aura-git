@@ -77,7 +77,8 @@ async function checkUser(req, res, next) {
   res.locals.user = null;
   res.locals.profile = null;
 
-  const token = req.cookies.jwt;
+  let token = req.cookies.jwt;
+  if (!token) token = req.headers.authorization;
 
   // Skip if no token is provided
   if (!token) return next();
