@@ -282,7 +282,7 @@ const TeamRegister = (props) => {
                     type="text"
                     name="transactionID"
                     id="txnID"
-                    onChange={(e) => setTransaction(e.target.value)}
+                    onChange={(e) => setTransaction(e.target.value.trim())}
                     required
                     placeholder="Enter Transaction ID"
                   />
