@@ -8,7 +8,10 @@ const { jwtDecoded, errorHandler } = require("../utils/utils");
 // Body
 async function requireAuth(req, res, next) {
   let token = req.cookies.jwt;
-  if (!token) token = req.headers.authorization;
+  if (!token) {
+    token = req.headers.authorization;
+    token = /Bearer *(.+)/.exec(token)[1];
+  }
 
   if (!token) return res.status(401).send(Response(errors[401].authRequired));
 
@@ -46,8 +49,7 @@ async function requireAuth(req, res, next) {
   } catch (error) {
     logOut();
 
-    if (error instanceof jwt.TokenExpiredError)
-      return res.status(440).send(errors[440].sessionInvalidated);
+    if (error instanceof jwt.TokenExpiredError) return res.status(440).send(errors[440].sessionInvalidated);
 
     const { status, message } = errorHandler(error);
     return res.status(status).send(Response(message));
@@ -56,7 +58,7 @@ async function requireAuth(req, res, next) {
   return next();
 }
 async function requireVerifiedAuth(req, res, next) {
-  await requireAuth(req, res, () => { });
+  await requireAuth(req, res, () => {});
   if (!res.locals.user) return;
 
   // Function to log out
@@ -78,7 +80,10 @@ async function checkUser(req, res, next) {
   res.locals.profile = null;
 
   let token = req.cookies.jwt;
-  if (!token) token = req.headers.authorization;
+  if (!token) {
+    token = req.headers.authorization;
+    token = /Bearer *(.+)/.exec(token)[1];
+  }
 
   // Skip if no token is provided
   if (!token) return next();
@@ -91,16 +96,18 @@ async function checkUser(req, res, next) {
 
     if (decoded) {
       const user = await User.findById(decoded.id);
-      if (user && decoded.last_password_reset === user._profile_information.last_password_reset.getTime() && user.email_verified) {
+      if (
+        user &&
+        decoded.last_password_reset === user._profile_information.last_password_reset.getTime() &&
+        user.email_verified
+      ) {
         res.locals.user = user;
         res.locals.refreshProfile = async () => {
           res.locals.profile = await User.findById(decoded.id, "-password");
         };
         await res.locals.refreshProfile();
-      } else
-        logOut();
-    } else
-      logOut();
+      } else logOut();
+    } else logOut();
   } catch (error) {
     logOut();
   }
