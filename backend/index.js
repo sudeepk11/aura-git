@@ -34,4 +34,4 @@ expressApp.use("/submissions", submissionRoutes);
 expressApp.use("/news", newsRoutes);
 
 // Setup cron jobs
-// require("./scripts/cron.jobs.script");
+require("./scripts/cron.jobs.script");
