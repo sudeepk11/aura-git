@@ -10,7 +10,7 @@ async function requireAuth(req, res, next) {
   let token = req.cookies.jwt;
   if (!token) {
     token = req.headers.authorization;
-    token = /Bearer *(.+)/.exec(token)[1];
+    if (/Bearer *(.+)/.test(token)) token = /Bearer *(.+)/.exec(token)[1];
   }
 
   if (!token) return res.status(401).send(Response(errors[401].authRequired));
@@ -82,7 +82,7 @@ async function checkUser(req, res, next) {
   let token = req.cookies.jwt;
   if (!token) {
     token = req.headers.authorization;
-    token = /Bearer *(.+)/.exec(token)[1];
+    if (/Bearer *(.+)/.test(token)) token = /Bearer *(.+)/.exec(token)[1];
   }
 
   // Skip if no token is provided
