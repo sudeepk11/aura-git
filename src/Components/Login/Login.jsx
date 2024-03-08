@@ -30,7 +30,7 @@ const Login = () => {
       .get(`/tickets/verification/email?email=${email}`)
       .then((res) => {
         if (res.data.success) {
-          // setMessage("A verification E-mail has been sent to your mail. Kindly check your spam folder as well!");
+          setMessage("A verification E-mail has been sent to your mail. Kindly check your spam folder as well!");
           navigateTo("/#/login");
         }
       })
@@ -40,7 +40,7 @@ const Login = () => {
           err.response.data.error === "400-emailAlreadySent"
         )
           setMessage(
-            "Verification E-mail already sent. Please check your mail."
+            "Verification E-mail already sent. Please check your mail and also check your spam folder."
           );
         else setError("Something went wrong. Please try again later.");
       });

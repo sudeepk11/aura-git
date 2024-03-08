@@ -236,10 +236,10 @@ const Signup = () => {
             </div> */}
 
             <div className="mt-8 mb-5">
-              <p className="text-blue-600 text-center text-sm pb-2">
+              {/* <p className="text-blue-600 text-center text-sm pb-2">
                 A verification E-mail will be sent on signup. Please verify to
                 login.
-              </p>
+              </p> */}
 
               <button className="btn btn-primary w-full" type="submit">
                 Signup
