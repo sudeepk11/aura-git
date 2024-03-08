@@ -30,7 +30,7 @@ expressApp.use(express.json());
 expressApp.use(
   cors({
     origin: meta.host,
-    // credentials: true,
+    credentials: true,
   })
 );
 expressApp.use(cookieParser());
