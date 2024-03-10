@@ -29,7 +29,7 @@ const { PORT } = process.env;
 expressApp.use(express.json());
 expressApp.use(
   cors({
-    origin: [meta.host, "https://admin-panel-aura.onrender.com"],
+    origin: [meta.host, "https://admin-panel-aura.onrender.com", meta.dev_host],
     credentials: true,
   })
 );

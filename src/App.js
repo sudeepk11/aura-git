@@ -95,15 +95,15 @@ function App() {
           <Route path="verifyEmail" element={<Changed />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="news" element={<News />} />
-          <Route path="admin/check-in" element={<CheckInPage />} />
 
           {/* <Route path="terms-and-conditions" element={<Policy />} />
           <Route path="privacy-policy" element={<Policy />} />
           <Route path="refund-policy" element={<Policy />} />
-          <Route path="about-us" element={<AboutUs />} /> */}
+        <Route path="about-us" element={<AboutUs />} /> */}
 
           <Route path="institution-registration" element={<InstituteReg />} />
           <Route path="admin" element={<AdminHomePage />} />
+          <Route path="admin/check-in-participant" element={<CheckInPage />} />
           <Route
             path="admin/institution-reciepts-approval"
             element={<InstitutionReceiptsApproval />}

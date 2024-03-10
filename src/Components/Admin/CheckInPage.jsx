@@ -15,6 +15,7 @@ function CheckInPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(user);
     if (user?.role !== "admin") {
       return navigate("/");
     }
