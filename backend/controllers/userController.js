@@ -47,7 +47,7 @@ async function userGetByAuraIdController(req, res, next) {
         $unwind: {
           path: "$receipts",
           includeArrayIndex: "string",
-          preserveNullAndEmptyArrays: false,
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
