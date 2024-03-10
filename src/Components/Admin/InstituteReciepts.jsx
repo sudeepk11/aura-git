@@ -4,7 +4,7 @@ import api from "../../Utils/axios.config";
 
 const InstitutionReceiptsApproval = () => {
   const [transactionId, setTransactionId] = useState("");
-  const [receiptDetails, setReceiptDetails] = useState({});
+  const [receiptDetails, setReceiptDetails] = useState(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const InstitutionReceiptsApproval = () => {
       return;
     }
     getReceiptDetails();
-    if (error === "") return;
+    if (error !== "") return;
     setLoading(true);
     setError("");
     setTransactionId("");
@@ -26,36 +26,36 @@ const InstitutionReceiptsApproval = () => {
     await api
       .get(`/college-receipts/${transactionId}`)
       .then((res) => {
-        setReceiptDetails(res.data);
+        let data = res.data.data;
+        setReceiptDetails(data.collegeReceipt);
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
         console.log(error);
-        if (error.response.status === 404)
-          setError("No such transaction found");
+        // "400-invalidCollegeReceiptId"
+        if (
+          error.response.status === 400 &&
+          error.response.data.error === "400-invalidCollegeReceiptId"
+        )
+          setError("Invalid Transaction ID");
         else setError("Something went wrong. Please try again later.");
       });
   };
-  //   async function handleReset() {
-  //     await api
-  //       .post(`/tickets/verification/password?email=${email}`, {
-  //         new_password: password,
-  //       })
-  //       .then((res) => {
-  //         setMessage("Verification link sent to your mail.");
-  //         setLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         setLoading(false);
-  //         if (
-  //           error.response.status === 400 &&
-  //           error.response.data.error === "400-emailAlreadySent"
-  //         )
-  //           setMessage("Email already sent. Please check your mail.");
-  //         else setError("Something went wrong. Please try again later.");
-  //       });
-  //   }
+
+  const approveReceipt = async (id) => {
+    await api
+      .post(`/college-receipts/${id}/approve`)
+      .then((res) => {
+        setMessage("Receipt Approved Successfully");
+        setReceiptDetails((prev) => ({ ...prev, isApproved: true }));
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError("Something went wrong. Please try again later.");
+      });
+  };
 
   return (
     <div className="grid form-container bg-signin bg-signinc w-screen">
@@ -69,7 +69,7 @@ const InstitutionReceiptsApproval = () => {
         )}
         {loading && (
           <p className="msg-box text-green-500 text-center">
-            Sending Verification link...
+            Verifying transaction details...
           </p>
         )}
         <form className="grid justify-items-stretch gap-5">
@@ -92,6 +92,31 @@ const InstitutionReceiptsApproval = () => {
             </button>
           </div>
         </form>
+        {/* Display these details */}
+        {receiptDetails && (
+          <div className="grid gap-5 bg-white rounded-lg p-3">
+            <div>
+              <p>Transaction ID: {receiptDetails.transactionId}</p>
+              <p>College Name: {receiptDetails.collegeName}</p>
+              <p>Amount: {receiptDetails.amount}</p>
+              <p>Balance Left: {receiptDetails.balanceLeft}</p>
+              <p>
+                Status:{" "}
+                {receiptDetails.isApproved ? "Approved ✅" : "Not Approved ❌"}
+              </p>
+            </div>
+          </div>
+        )}
+        {receiptDetails && !receiptDetails.isApproved && (
+          <div className="mt-8 mb-5">
+            <button
+              className="btn btn-primary !bg-green-500 w-full"
+              onClick={() => approveReceipt(receiptDetails._id)}
+            >
+              Approve Reciept
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

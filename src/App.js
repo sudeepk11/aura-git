@@ -29,6 +29,7 @@ import { getUserIPInfo } from "./Utils/ip.config";
 import { errorToast } from "./Utils/Toasts/Toasts";
 import InstituteReg from "./Components/Institute/InstituteRegistration";
 import InstitutionReceiptsApproval from "./Components/Admin/InstituteReciepts";
+import AdminHomePage from "./Components/Admin/AdminHome";
 
 function App() {
   const { setUser } = useUser();
@@ -91,7 +92,9 @@ function App() {
           <Route path="privacy-policy" element={<Policy />} />
           <Route path="refund-policy" element={<Policy />} />
           <Route path="about-us" element={<AboutUs />} /> */}
+
           <Route path="institution-registration" element={<InstituteReg />} />
+          <Route path="admin" element={<AdminHomePage />} />
           <Route
             path="admin/institution-reciepts-approval"
             element={<InstitutionReceiptsApproval />}
