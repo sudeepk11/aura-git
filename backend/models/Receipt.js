@@ -24,7 +24,18 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, errors[400].transactionIdRequired],
       trim: true,
-      unique: true,
+      // unique: true,
+      index: true,
+    },
+    options: {
+      paidByCollege: {
+        type: Boolean,
+        default: false,
+      },
+      collegeSecret: {
+        type: String,
+        default: null,
+      },
     },
   },
   { timestamps: true }

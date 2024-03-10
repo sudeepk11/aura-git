@@ -26,6 +26,10 @@ const purposeData = new Map([
   ],
 ]);
 const userSchema = new mongoose.Schema({
+  role: {
+    type: String,
+    default: "user",
+  },
   aura_id: {
     type: String,
     required: true,
@@ -99,6 +103,10 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Types.ObjectId,
       default: null,
     },
+  },
+  checked_in: {
+    type: Boolean,
+    default: false,
   },
   _profile_information: {
     last_password_reset: {
