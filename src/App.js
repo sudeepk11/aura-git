@@ -27,6 +27,7 @@ import News from "./Components/News/News";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserIPInfo } from "./Utils/ip.config";
 import { errorToast } from "./Utils/Toasts/Toasts";
+import InstituteReg from "./Components/Institute/InstituteRegistration";
 
 function App() {
   const { setUser } = useUser();
@@ -89,6 +90,7 @@ function App() {
           <Route path="privacy-policy" element={<Policy />} />
           <Route path="refund-policy" element={<Policy />} />
           <Route path="about-us" element={<AboutUs />} /> */}
+          <Route path="institution-registration" element={<InstituteReg />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </section>
