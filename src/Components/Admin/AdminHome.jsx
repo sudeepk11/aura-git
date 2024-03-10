@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useUser } from "../../Contexts/userContext";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminHomePage = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.role !== "admin") {
