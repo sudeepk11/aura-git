@@ -1,15 +1,76 @@
 // Imports
 const { Router } = require("express");
-const { body } = require("express-validator");
+const { param, query, body } = require("express-validator");
 const errorCodes = require("../configs/error.codes.json");
 const { expressValidationErrorHandler } = require("../middleware/validationErrorHandler");
+const { requireAdminAuth } = require("../middleware/adminAuthMiddleware");
 const { complete } = require("../controllers/controllers");
-const { createCollegeReceiptCtrl, registerUsingCollegeReceiptCtrl } = require("../controllers/collegeReceiptController");
+const {
+  getAllCollegeReceiptsCtrl,
+  getCollegeReceiptByIdCtrl,
+  approveCollegeReceiptCtrl,
+  disapproveCollegeReceiptCtrl,
+  createCollegeReceiptCtrl,
+  registerUsingCollegeReceiptCtrl,
+} = require("../controllers/collegeReceiptController");
 
 // Constants
 const router = Router();
 
 // Body
+router.get(
+  "/",
+  requireAdminAuth,
+  query("approved")
+    .optional()
+    .notEmpty()
+    .withMessage(errorCodes[400].approvedQueryParamCannotBeEmpty)
+    .isBoolean()
+    .withMessage(errorCodes[400].invalidApprovedQueryParam),
+  expressValidationErrorHandler,
+  getAllCollegeReceiptsCtrl,
+  complete
+);
+
+router.get(
+  "/:id",
+  requireAdminAuth,
+  param("id")
+    .exists()
+    .withMessage(errorCodes[400].collegeReceiptIdRequired)
+    .isMongoId()
+    .withMessage(errorCodes[400].invalidCollegeReceiptId),
+  expressValidationErrorHandler,
+  getCollegeReceiptByIdCtrl,
+  complete
+);
+
+router.post(
+  "/:id/approve",
+  requireAdminAuth,
+  param("id")
+    .exists()
+    .withMessage(errorCodes[400].collegeReceiptIdRequired)
+    .isMongoId()
+    .withMessage(errorCodes[400].invalidCollegeReceiptId),
+  expressValidationErrorHandler,
+  approveCollegeReceiptCtrl,
+  complete
+);
+
+router.post(
+  "/:id/disapprove",
+  requireAdminAuth,
+  param("id")
+    .exists()
+    .withMessage(errorCodes[400].collegeReceiptIdRequired)
+    .isMongoId()
+    .withMessage(errorCodes[400].invalidCollegeReceiptId),
+  expressValidationErrorHandler,
+  disapproveCollegeReceiptCtrl,
+  complete
+);
+
 router.post(
   "/",
   body("collegeName")

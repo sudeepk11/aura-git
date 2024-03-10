@@ -60,12 +60,17 @@
     "invalidCollegeSecret": "400-invalidCollegeSecret",
     "duplicateCollegeSecret": "400-duplicateCollegeSecret",
     "duplicateCollegeSecretOrTransactionId": "400-duplicateCollegeSecretOrTransactionId",
+    "collegeReceiptIdRequired": "400-collegeReceiptIdRequired",
+    "invalidCollegeReceiptId": "400-invalidCollegeReceiptId",
     "collegeReceiptOutOfBalance": "400-collegeReceiptOutOfBalance",
     "collegeReceiptUnapproved": "400-collegeReceiptUnapproved",
-    "alreadyPaid": "400-alreadyPaid"
+    "alreadyPaid": "400-alreadyPaid",
+    "approvedQueryParamCannotBeEmpty": "400-approvedQueryParamCannotBeEmpty",
+    "invalidApprovedQueryParam": "400-invalidApprovedQueryParam"
   },
   "401": {
     "authRequired": "401-authRequired",
+    "adminAuthRequired": "401-adminAuthRequired",
     "invalidOrExpiredToken": "401-invalidOrExpiredToken"
   },
   "403": {

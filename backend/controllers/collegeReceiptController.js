@@ -1,6 +1,7 @@
 // Imports
 const mongoose = require("mongoose");
 const errors = require("../configs/error.codes.json");
+const queryConfig = require("../configs/query.config.json");
 const StdResponse = require("../models/standard.response.model");
 const User = require("../models/User");
 const Event = require("../models/Event");
@@ -17,6 +18,114 @@ function getCollegeReceiptDeductionAmountByEventTeamSize(teamSize) {
   if (teamSize === 3 || teamSize === 4) return -299;
 
   return -399;
+}
+
+async function getAllCollegeReceiptsCtrl(req, res, next) {
+  try {
+    const { query } = req;
+
+    let { pageSize = queryConfig["search.pagination"]["page.size"], paginationTs = Date.now(), approved = undefined } = query;
+    pageSize = parseInt(pageSize, 10);
+    paginationTs = parseInt(paginationTs, 10);
+
+    if (typeof pageSize === "string") pageSize = parseInt(pageSize, 10);
+    if (pageSize <= 0 || pageSize > queryConfig["search.pagination"]["page.max.size"])
+      pageSize = queryConfig["search.pagination"]["page.size"];
+
+    const collegeReceipts = await CollegeReceipt.find({
+      ...(approved === undefined ? {} : { isApproved: approved === "true" }),
+      createdAt: { $lte: paginationTs },
+    })
+      .sort({ createdAt: -1 })
+      .limit(pageSize + 1);
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.pageSize = pageSize;
+    res.locals.data.resultsSize = collegeReceipts.length === pageSize + 1 ? pageSize : collegeReceipts.length;
+    res.locals.data.paginationTs =
+      collegeReceipts.length - 1 === pageSize ? collegeReceipts[collegeReceipts.length - 1].createdAt.getTime() : null;
+    res.locals.data.results = collegeReceipts.slice(0, pageSize).filter((receipt) => !!receipt);
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
+}
+
+async function getCollegeReceiptByIdCtrl(req, res, next) {
+  try {
+    const { params } = req;
+
+    const { id } = params;
+
+    const collegeReceipt = await CollegeReceipt.findById(id);
+    if (!collegeReceipt) return res.status(404).send(Response(errors[404].collegeReceiptNotFound));
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.collegeReceipt = collegeReceipt;
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
+}
+
+async function approveCollegeReceiptCtrl(req, res, next) {
+  try {
+    const { params } = req;
+
+    const { id } = params;
+
+    if (!(await CollegeReceipt.exists({ _id: id }))) return res.status(404).send(Response(errors[404].collegeReceiptNotFound));
+
+    const updatedCollegeReceipt = await CollegeReceipt.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          isApproved: true,
+        },
+      },
+      { new: true }
+    );
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.collegeReceipt = updatedCollegeReceipt;
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
+}
+
+async function disapproveCollegeReceiptCtrl(req, res, next) {
+  try {
+    const { params } = req;
+
+    const { id } = params;
+
+    if (!(await CollegeReceipt.exists({ _id: id }))) return res.status(404).send(Response(errors[404].collegeReceiptNotFound));
+
+    const updatedCollegeReceipt = await CollegeReceipt.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          isApproved: false,
+        },
+      },
+      { new: true }
+    );
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.collegeReceipt = updatedCollegeReceipt;
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
 }
 
 async function createCollegeReceiptCtrl(req, res, next) {
@@ -194,6 +303,10 @@ async function registerUsingCollegeReceiptCtrl(req, res, next) {
 }
 
 module.exports = {
+  getAllCollegeReceiptsCtrl,
+  getCollegeReceiptByIdCtrl,
+  approveCollegeReceiptCtrl,
+  disapproveCollegeReceiptCtrl,
   createCollegeReceiptCtrl,
   registerUsingCollegeReceiptCtrl,
 };

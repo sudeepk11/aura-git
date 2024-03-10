@@ -26,6 +26,10 @@ const purposeData = new Map([
   ],
 ]);
 const userSchema = new mongoose.Schema({
+  role: {
+    type: String,
+    default: "user",
+  },
   aura_id: {
     type: String,
     required: true,
