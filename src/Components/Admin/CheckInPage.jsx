@@ -54,8 +54,8 @@ function CheckInPage() {
     try {
       const { data } = await api.post(`users/aura-id/${auraId}/check-in`);
       if (!data?.success) setError("Failed to check in user");
-
-      navigate("/");
+      setMessage("User Checked In!");
+      // navigate("/");
     } catch (e) {
       console.error(e);
       errorToast("Failed to check in student");
