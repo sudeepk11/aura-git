@@ -1,5 +1,4 @@
 // Imports
-const assert = require("assert");
 const errors = require("../configs/error.codes.json");
 const queryConfig = require("../configs/query.config.json");
 const Response = require("../models/standard.response.model");
@@ -43,9 +42,9 @@ async function receiptGetAllController(req, res, next) {
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.pageSize = pageSize;
-    res.locals.data.resultsSize = (receipts.length === pageSize + 1 ? pageSize : receipts.length);
-    res.locals.data.paginationTs = (receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null);
-    res.locals.data.results = receipts.slice(0, pageSize).filter(receipt => !!receipt);
+    res.locals.data.resultsSize = receipts.length === pageSize + 1 ? pageSize : receipts.length;
+    res.locals.data.paginationTs = receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null;
+    res.locals.data.results = receipts.slice(0, pageSize).filter((receipt) => !!receipt);
   } catch (error) {
     const { status, message } = errorHandler(error);
     return res.status(status).send(Response(message));
@@ -90,9 +89,9 @@ async function receiptGetByCurrentUserController(req, res, next) {
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.pageSize = pageSize;
-    res.locals.data.resultsSize = (receipts.length === pageSize + 1 ? pageSize : receipts.length);
-    res.locals.data.paginationTs = (receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null);
-    res.locals.data.results = receipts.slice(0, pageSize).filter(receipt => !!receipt);
+    res.locals.data.resultsSize = receipts.length === pageSize + 1 ? pageSize : receipts.length;
+    res.locals.data.paginationTs = receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null;
+    res.locals.data.results = receipts.slice(0, pageSize).filter((receipt) => !!receipt);
   } catch (error) {
     const { status, message } = errorHandler(error);
     return res.status(status).send(Response(message));
@@ -168,9 +167,9 @@ async function receiptGetByEventController(req, res, next) {
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.pageSize = pageSize;
-    res.locals.data.resultsSize = (receipts.length === pageSize + 1 ? pageSize : receipts.length);
-    res.locals.data.paginationTs = (receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null);
-    res.locals.data.results = receipts.slice(0, pageSize).filter(receipt => !!receipt);
+    res.locals.data.resultsSize = receipts.length === pageSize + 1 ? pageSize : receipts.length;
+    res.locals.data.paginationTs = receipts.length - 1 === pageSize ? receipts[receipts.length - 1].createdAt.getTime() : null;
+    res.locals.data.results = receipts.slice(0, pageSize).filter((receipt) => !!receipt);
   } catch (error) {
     const { status, message } = errorHandler(error);
     return res.status(status).send(Response(message));
@@ -241,57 +240,59 @@ async function receiptGetStatsParticipationController(req, res, next) {
   try {
     const aggregation = [
       {
-        "$lookup": {
-          "from": "teams",
-          "localField": "team",
-          "foreignField": "_id",
-          "as": "_team"
-        }
-      }, {
-        "$match": {
+        $lookup: {
+          from: "teams",
+          localField: "team",
+          foreignField: "_id",
+          as: "_team",
+        },
+      },
+      {
+        $match: {
           "_team.0": {
-            "$exists": true
-          }
-        }
-      }, {
-        "$set": {
-          "team_doc": {
-            "$arrayElemAt": [
-              "$_team", 0
-            ]
-          }
-        }
-      }, {
-        "$project": {
-          "users": {
-            "$concatArrays": [
+            $exists: true,
+          },
+        },
+      },
+      {
+        $set: {
+          team_doc: {
+            $arrayElemAt: ["$_team", 0],
+          },
+        },
+      },
+      {
+        $project: {
+          users: {
+            $concatArrays: [
               [
                 {
-                  "$ifNull": [
-                    "$team_doc.team_leader.id", null
-                  ]
-                }
-              ], "$team_doc.team_members.id"
-            ]
-          }
-        }
-      }, {
-        "$unwind": "$users"
-      }, {
-        "$group": {
-          "_id": "$users",
-          "count": {
-            "$sum": 1
-          }
-        }
-      }, {
-        "$count": "total_participation"
-      }
+                  $ifNull: ["$team_doc.team_leader.id", null],
+                },
+              ],
+              "$team_doc.team_members.id",
+            ],
+          },
+        },
+      },
+      {
+        $unwind: "$users",
+      },
+      {
+        $group: {
+          _id: "$users",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $count: "total_participation",
+      },
     ];
     const result = await Receipt.aggregate(aggregation);
 
-    if (!res.locals.data)
-      res.locals.data = {};
+    if (!res.locals.data) res.locals.data = {};
     res.locals.data.result = result;
   } catch (error) {
     const { status, message } = errorHandler(error);
@@ -305,90 +306,98 @@ async function receiptGetStatsGitParticipationController(req, res, next) {
   try {
     const aggregation = [
       {
-        "$lookup": {
-          "from": "teams",
-          "localField": "team",
-          "foreignField": "_id",
-          "as": "_team"
-        }
-      }, {
-        "$match": {
+        $lookup: {
+          from: "teams",
+          localField: "team",
+          foreignField: "_id",
+          as: "_team",
+        },
+      },
+      {
+        $match: {
           "_team.0": {
-            "$exists": true
-          }
-        }
-      }, {
-        "$set": {
-          "team_doc": {
-            "$arrayElemAt": [
-              "$_team", 0
-            ]
-          }
-        }
-      }, {
-        "$lookup": {
-          "from": "users",
-          "localField": "user",
-          "foreignField": "_id",
-          "as": "_user"
-        }
-      }, {
-        "$match": {
-          "$or": [
+            $exists: true,
+          },
+        },
+      },
+      {
+        $set: {
+          team_doc: {
+            $arrayElemAt: ["$_team", 0],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "_user",
+        },
+      },
+      {
+        $match: {
+          $or: [
             {
               "_user.0.college": {
-                "$regex": "^(?=.* ?k.?l.?s *g.?i.?t ?.*).+$",
-                "$options": "i"
-              }
-            }, {
+                $regex: "^(?=.* ?k.?l.?s *g.?i.?t ?.*).+$",
+                $options: "i",
+              },
+            },
+            {
               "_user.0.college": {
-                "$regex": "^(?=.* ?g.?i.?t ?.*).+$",
-                "$options": "i"
-              }
-            }, {
+                $regex: "^(?=.* ?g.?i.?t ?.*).+$",
+                $options: "i",
+              },
+            },
+            {
               "_user.0.college": {
-                "$regex": "^(?=.* ?gogte +(institute|instiue|instiut|instuite) +(of|o|f) +(tech|techno|technology|technlogy) ?.*).+$",
-                "$options": "i"
-              }
-            }, {
+                $regex:
+                  "^(?=.* ?gogte +(institute|instiue|instiut|instuite) +(of|o|f) +(tech|techno|technology|technlogy) ?.*).+$",
+                $options: "i",
+              },
+            },
+            {
               "_user.0.college": {
-                "$regex": "^(?=.* ?C-1439 ?.*).+$",
-                "$options": "i"
-              }
-            }
-          ]
-        }
-      }, {
-        "$project": {
-          "users": {
-            "$concatArrays": [
+                $regex: "^(?=.* ?C-1439 ?.*).+$",
+                $options: "i",
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          users: {
+            $concatArrays: [
               [
                 {
-                  "$ifNull": [
-                    "$team_doc.team_leader.id", null
-                  ]
-                }
-              ], "$team_doc.team_members.id"
-            ]
-          }
-        }
-      }, {
-        "$unwind": "$users"
-      }, {
-        "$group": {
-          "_id": "$users",
-          "count": {
-            "$sum": 1
-          }
-        }
-      }, {
-        "$count": "total_gitian_participation"
-      }
+                  $ifNull: ["$team_doc.team_leader.id", null],
+                },
+              ],
+              "$team_doc.team_members.id",
+            ],
+          },
+        },
+      },
+      {
+        $unwind: "$users",
+      },
+      {
+        $group: {
+          _id: "$users",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $count: "total_gitian_participation",
+      },
     ];
     const result = await Receipt.aggregate(aggregation);
 
-    if (!res.locals.data)
-      res.locals.data = {};
+    if (!res.locals.data) res.locals.data = {};
     res.locals.data.result = result;
   } catch (error) {
     const { status, message } = errorHandler(error);
@@ -416,6 +425,9 @@ async function receiptCreateController(req, res, next) {
     if (!team) return res.status(404).send(Response(errors[404].teamNotFound));
     if (String(team.team_leader.id) !== String(res.locals.user._id))
       return res.status(403).send(Response(errors[403].invalidOperation));
+
+    // Check if any other receipt exists with the same transaction id
+    if (await Receipt.exists({ transaction_id })) return res.status(400).send(Response(errors[400].receiptExists));
 
     // Create receipt
     const receipt = await Receipt.create({
@@ -492,13 +504,11 @@ async function receiptCreateNoAuthController(req, res, next) {
 
     // Check if team exists and belongs to current user
     const team = await Team.findById(team_id);
-    if (!team)
-      return res.status(404).send(Response(errors[404].teamNotFound));
+    if (!team) return res.status(404).send(Response(errors[404].teamNotFound));
 
     // Check if team leader exists
     const user = await User.findById(team.team_leader.id);
-    if (!user)
-      return res.status(404).send(Response(errors[404].userNotFound));
+    if (!user) return res.status(404).send(Response(errors[404].userNotFound));
 
     // Create receipt
     const receipt = await Receipt.create({
@@ -570,6 +580,9 @@ async function receiptUpdateController(req, res, next) {
 
     const { id } = params;
     const { transaction_id = undefined } = body;
+
+    // Check if any other receipt exists with the same transaction id
+    if (await Receipt.exists({ transaction_id })) return res.status(400).send(Response(errors[400].receiptExists));
 
     // Check if receipt exists and belongs to current user
     const receipt = await Receipt.findById(id);

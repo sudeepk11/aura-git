@@ -30,6 +30,7 @@
     "invalidKind": "400-invalidKind",
     "idRequired": "400-idRequired",
     "collegeRequired": "400-collegeRequired",
+    "invalidCollege": "400-invalidCollege",
     "phoneRequired": "400-phoneRequired",
     "invalidPhone": "400-invalidPhone",
     "invalidLinksBody": "400-invalidLinksBody",
@@ -46,11 +47,22 @@
     "newsContentRequired": "400-newsContentRequired",
     "userIdRequired": "400-userIdRequired",
     "teamIdRequired": "400-teamIdRequired",
+    "invalidTeamId": "400-invalidTeamId",
     "transactionIdRequired": "400-transactionIdRequired",
+    "duplicateTransactionId": "400-duplicateTransactionId",
     "receiptExists": "400-receiptExists",
     "invalidTransactionId": "400-invalidTransactionId",
     "duplicateTeamMembers": "400-duplicateTeamMembers",
-    "captchaTokenRequired": "400-captchaTokenRequired"
+    "captchaTokenRequired": "400-captchaTokenRequired",
+    "amountRequired": "400-amountRequired",
+    "invalidAmount": "400-invalidAmount",
+    "collegeSecretRequired": "400-collegeSecretRequired",
+    "invalidCollegeSecret": "400-invalidCollegeSecret",
+    "duplicateCollegeSecret": "400-duplicateCollegeSecret",
+    "duplicateCollegeSecretOrTransactionId": "400-duplicateCollegeSecretOrTransactionId",
+    "collegeReceiptOutOfBalance": "400-collegeReceiptOutOfBalance",
+    "collegeReceiptUnapproved": "400-collegeReceiptUnapproved",
+    "alreadyPaid": "400-alreadyPaid"
   },
   "401": {
     "authRequired": "401-authRequired",
@@ -83,7 +95,8 @@
     "teamNotFound": "404-teamNotFound",
     "submissionNotFound": "404-submissionNotFound",
     "newsNotFound": "404-newsNotFound",
-    "receiptNotFound": "404-receiptNotFound"
+    "receiptNotFound": "404-receiptNotFound",
+    "collegeReceiptNotFound": "404-collegeReceiptNotFound"
   },
   "440": {
     "sessionExpired": "440-sessionExpired",
