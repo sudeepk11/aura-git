@@ -27,8 +27,104 @@ async function userGetByAuraIdController(req, res, next) {
   try {
     const { auraId } = req.params;
 
-    const user = await User.findOne({ aura_id: auraId }, "-password");
-    if (!user) return res.status(404).send(Response(errors[404].userNotFound));
+    const aggregationResult = await User.aggregate([
+      {
+        $match: {
+          aura_id: auraId,
+        },
+      },
+      { $project: { _id: 1, paid_for: 1 } },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "paid_for.receipt_id",
+          foreignField: "_id",
+          as: "receipts",
+        },
+      },
+      { $unset: "paid_for" },
+      {
+        $unwind: {
+          path: "$receipts",
+          includeArrayIndex: "string",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $lookup: {
+          from: "events",
+          localField: "receipts.event",
+          foreignField: "_id",
+          as: "receipts.event",
+        },
+      },
+      {
+        $lookup: {
+          from: "teams",
+          localField: "receipts.team",
+          foreignField: "_id",
+          as: "receipts.team",
+        },
+      },
+      {
+        $unwind: {
+          path: "$receipts.event",
+          includeArrayIndex: "string",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$receipts.team",
+          includeArrayIndex: "string",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unset: [
+          "receipts.team.event_participated",
+          "receipts.team.team_leader",
+          "receipts.event.kind",
+          "receipts.event.description",
+          "receipts.event.min_team_size",
+          "receipts.event.rounds",
+          "receipts.event.registration_limit",
+          "receipts.event.whatsapp_group",
+          "receipts.event.rules",
+          "receipts.event.event_coordinators",
+          "receipts.event._slugs",
+          "receipts.event.reg_open",
+          "receipts.event.registered_teams",
+        ],
+      },
+      {
+        $group: {
+          _id: "$_id",
+          receipts: { $push: "$receipts" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          includeArrayIndex: "string",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      { $set: { "user.receipts": "$receipts" } },
+      { $unset: "user.paid_for" },
+      { $replaceRoot: { newRoot: "$user" } },
+    ]);
+    if (aggregationResult.length === 0) return res.status(404).send(Response(errors[404].userNotFound));
+
+    const user = aggregationResult[0];
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.user = user;
