@@ -171,7 +171,11 @@ async function userIssueAuraPassByAuraIdController(req, res, next) {
     const { auraId } = params;
 
     // Check if the user exists
-    if (!(await User.exists({ aura_id: auraId }))) return res.status(404).send(Response(errors[404].userNotFound));
+    const user = await User.findOne({ aura_id: auraId });
+    if (!user) return res.status(404).send(Response(errors[404].userNotFound));
+
+    // Check if the user was already issued the pass
+    if (user.aura_pass_issued) return res.status(403).send(Response(errors[403].auraPassAlreadyIssued));
 
     // Aggregation query
     const aggregationResult = await User.aggregate([
@@ -230,18 +234,17 @@ async function userIssueAuraPassByAuraIdController(req, res, next) {
     if (!isAuraPassIssuable) return res.status(403).send(Response(errors[403].userIsIneligibleForAuraPass));
 
     // Issue user aura pass
-    const updatedUser = await User.findOneAndUpdate(
+    await User.updateOne(
       { aura_id: auraId },
       {
         $set: {
           aura_pass_issued: true,
         },
-      },
-      { new: true }
+      }
     );
 
     if (!res.locals.data) res.locals.data = {};
-    res.locals.data.user = updatedUser;
+    res.locals.data.auraPassIssued = true;
   } catch (error) {
     const { status, message } = errorHandler(error);
     return res.status(status).send(Response(message));
