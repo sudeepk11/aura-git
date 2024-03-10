@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../Utils/axios.config";
 import { useUser } from "../../Contexts/userContext";
+import { useNavigate } from "react-router-dom";
 
 const InstitutionReceiptsApproval = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const [transactionId, setTransactionId] = useState("");
   const [receiptDetails, setReceiptDetails] = useState(null);
