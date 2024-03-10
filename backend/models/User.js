@@ -25,100 +25,113 @@ const purposeData = new Map([
     },
   ],
 ]);
-const userSchema = new mongoose.Schema({
-  role: {
-    type: String,
-    default: "user",
-  },
-  aura_id: {
-    type: String,
-    required: true,
-    trim: true,
-    default: function () {
-      if (!this.name) return null;
-      return genAuraId(this.name);
+const userSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      default: "user",
     },
-  },
-  name: {
-    type: String,
-    required: [true, errors[400].nameRequired],
-    trim: true,
-    minlength: [1, errors[400].shortName],
-  },
-  email: {
-    type: String,
-    required: [true, errors[400].emailRequired],
-    unique: true,
-    lowercase: true,
-    validate: [isEmail, errors[400].invalidEmail],
-  },
-  phone: {
-    type: String,
-    required: [true, errors[400].phoneRequired],
-    trim: true,
-    validate: [(phone) => /^[0-9 ]+$/.test(phone), errors[400].invalidPhone],
-  },
-  usn: {
-    type: String,
-    required: [true, errors[400].usnRequired],
-    trim: true,
-  },
-  college: {
-    type: String,
-    required: [true, errors[400].collegeRequired],
-    trim: true,
-  },
-  email_verified: {
-    type: Boolean,
-    default: ENABLE_NODEMAILER !== "1",
-  },
-  password: {
-    type: String,
-    required: [true, errors[400].passwordRequired],
-    minlength: [6, errors[400].shortPassword],
-  },
-  paid_for: {
-    type: [
-      {
-        event_id: {
-          type: mongoose.Types.ObjectId,
-          required: [true, errors[400].eventIdRequired],
-          ref: "event",
-        },
-        receipt_id: {
-          type: mongoose.Types.ObjectId,
-          required: [true, errors[500]],
-          ref: "receipt",
-        },
+    aura_id: {
+      type: String,
+      required: true,
+      trim: true,
+      default: function () {
+        if (!this.name) return null;
+        return genAuraId(this.name);
       },
-    ],
-    default: [],
-  },
-  tickets: {
-    email_verification: {
-      type: mongoose.Types.ObjectId,
-      default: null,
     },
-    password_reset: {
-      type: mongoose.Types.ObjectId,
-      default: null,
+    name: {
+      type: String,
+      required: [true, errors[400].nameRequired],
+      trim: true,
+      minlength: [1, errors[400].shortName],
+    },
+    email: {
+      type: String,
+      required: [true, errors[400].emailRequired],
+      unique: true,
+      lowercase: true,
+      validate: [isEmail, errors[400].invalidEmail],
+    },
+    phone: {
+      type: String,
+      required: [true, errors[400].phoneRequired],
+      trim: true,
+      validate: [(phone) => /^[0-9 ]+$/.test(phone), errors[400].invalidPhone],
+    },
+    usn: {
+      type: String,
+      required: [true, errors[400].usnRequired],
+      trim: true,
+    },
+    college: {
+      type: String,
+      required: [true, errors[400].collegeRequired],
+      trim: true,
+    },
+    email_verified: {
+      type: Boolean,
+      default: ENABLE_NODEMAILER !== "1",
+    },
+    password: {
+      type: String,
+      required: [true, errors[400].passwordRequired],
+      minlength: [6, errors[400].shortPassword],
+    },
+    paid_for: {
+      type: [
+        {
+          event_id: {
+            type: mongoose.Types.ObjectId,
+            required: [true, errors[400].eventIdRequired],
+            ref: "event",
+          },
+          receipt_id: {
+            type: mongoose.Types.ObjectId,
+            required: [true, errors[500]],
+            ref: "receipt",
+          },
+        },
+      ],
+      default: [],
+    },
+    tickets: {
+      email_verification: {
+        type: mongoose.Types.ObjectId,
+        default: null,
+      },
+      password_reset: {
+        type: mongoose.Types.ObjectId,
+        default: null,
+      },
+    },
+    checked_in: {
+      type: Boolean,
+      default: false,
+    },
+    aura_pass_issued: {
+      type: Boolean,
+      default: false,
+    },
+    _profile_information: {
+      last_password_reset: {
+        type: Date,
+        default: Date.now,
+      },
+      account_creation_timestamp: {
+        type: Number,
+        default: Date.now,
+      },
     },
   },
-  checked_in: {
-    type: Boolean,
-    default: false,
-  },
-  _profile_information: {
-    last_password_reset: {
-      type: Date,
-      default: Date.now,
+  {
+    toJSON: {
+      transform: (doc, ret) => {
+        delete ret.password;
+      },
     },
-    account_creation_timestamp: {
-      type: Number,
-      default: Date.now,
-    },
-  },
-});
+  }
+);
 
 // Methods
 userSchema.methods.createNewTicket = async function (purpose, data = null) {
