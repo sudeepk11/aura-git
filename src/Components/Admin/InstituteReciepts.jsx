@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../Utils/axios.config";
+import { useUser } from "../../Contexts/userContext";
 
 const InstitutionReceiptsApproval = () => {
+  const { user } = useUser();
+
   const [transactionId, setTransactionId] = useState("");
   const [receiptDetails, setReceiptDetails] = useState(null);
   const [error, setError] = useState("");
@@ -56,6 +59,12 @@ const InstitutionReceiptsApproval = () => {
         setError("Something went wrong. Please try again later.");
       });
   };
+
+  useEffect(() => {
+    if (user?.role !== "admin") {
+      return navigate("/");
+    }
+  }, [user]);
 
   return (
     <div className="grid form-container bg-signin bg-signinc w-screen">
