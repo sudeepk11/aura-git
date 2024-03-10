@@ -9,12 +9,9 @@ import { redirect } from "react-router-dom";
 import payqr from "../../Assets/qr.png";
 
 function getRegistrationFeesForEventTeamSize(teamSize) {
-  if (teamSize === 1)
-    return 99;
-  if (teamSize === 2)
-    return 199;
-  if (teamSize <= 4)
-    return 299;
+  if (teamSize === 1) return 99;
+  if (teamSize === 2) return 199;
+  if (teamSize <= 4) return 299;
 
   return 399;
 }
@@ -27,6 +24,8 @@ const TeamRegister = (props) => {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [transID, setTransaction] = useState("");
+  const [instituteSecret, setInstituteSecret] = useState("");
+  const [paidByInstitute, setPaidByInstitute] = useState(false);
   const event_participated = {
     event_id: props.id,
     event_title: props.title,
@@ -80,7 +79,6 @@ const TeamRegister = (props) => {
   };
 
   const errorHandler = (err) => {
-    console.log(err);
     let err_status = err.response.status;
     let err_code = err.response.data.error;
     setLoading(false);
@@ -202,9 +200,7 @@ const TeamRegister = (props) => {
           transaction_id: transID,
         })
         .then((res) => {
-          successToast(
-            "Your payment has been recorded."
-          );
+          successToast("Your payment has been recorded.");
 
           // setTimeout(
           //   () => window.open("https://forms.gle/BSBtcqeEYfZWqo4Y9", "_blank"),
@@ -215,11 +211,51 @@ const TeamRegister = (props) => {
           setShowModal(false);
         })
         .catch((err) => {
-          errorToast("Failed to record payment");
+          // "400-receiptExists"
+          if (
+            err.response.status === 400 &&
+            err.response.data.error === "400-receiptExists"
+          )
+            errorToast("This transaction ID has already been used.");
+          else errorToast("Failed to record payment");
         });
     } else {
       errorToast("The Transaction ID was invalid.");
     }
+  };
+
+  const payUsingInstituteCredits = () => {
+    if (instituteSecret === "") {
+      errorToast("Please enter Institute Secret");
+      return;
+    }
+    api
+      .post(`/college-receipts/register`, {
+        teamId: props.team._id,
+        transactionId: transID,
+        collegeSecret: instituteSecret,
+      })
+      .then((res) => {
+        successToast("Your payment has been recorded.");
+        props.setPaid(true);
+        setShowModal(false);
+      })
+      .catch((err) => {
+        // 400-collegeReceiptUnapproved
+        // "404-collegeReceiptNotFound"
+        console.log(err);
+        if (
+          err.response.status === 400 &&
+          err.response.data.error === "400-collegeReceiptUnapproved"
+        )
+          errorToast("Your college receipt has not been approved yet.");
+        else if (
+          err.response.status === 404 &&
+          err.response.data.error === "404-collegeReceiptNotFound"
+        )
+          errorToast("Invalid Transaction Id or Institute Secret");
+        else errorToast("Failed to record payment");
+      });
   };
   const renderInputForms = (x) => {
     const inputForms = [];
@@ -255,14 +291,6 @@ const TeamRegister = (props) => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold">Pay Now</h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
                 </div>
                 <div className="relative p-6 flex-auto">
                   <img
@@ -277,6 +305,16 @@ const TeamRegister = (props) => {
                     </strong>{" "}
                     by scanning the QR code displayed above.
                   </p>
+
+                  <button
+                    className="text-blue-600 text-md underline my-4 w-full text-left"
+                    onClick={() => setPaidByInstitute(!paidByInstitute)}
+                  >
+                    {paidByInstitute
+                      ? "Paid by Individual? Click here."
+                      : "Paid by Institute? Click here."}
+                  </button>
+
                   <input
                     className="bg-gray-100 w-full rounded-lg p-2 col-span-1 outline-none my-3"
                     type="text"
@@ -286,7 +324,23 @@ const TeamRegister = (props) => {
                     required
                     placeholder="Enter Transaction ID"
                   />
+                  {/* Paid by institute then ask for institute secret */}
+                  {paidByInstitute && (
+                    <input
+                      className="bg-gray-100 w-full rounded-lg p-2 col-span-1 outline-none my-3"
+                      type="password"
+                      name="instituteSecret"
+                      id="instituteSecret"
+                      required
+                      onChange={(e) =>
+                        setInstituteSecret(e.target.value.trim())
+                      }
+                      value={instituteSecret}
+                      placeholder="Enter Institute Secret"
+                    />
+                  )}
                 </div>
+
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <button
                     className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -298,7 +352,13 @@ const TeamRegister = (props) => {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => pay()}
+                    onClick={() => {
+                      if (paidByInstitute) {
+                        payUsingInstituteCredits();
+                      } else {
+                        pay();
+                      }
+                    }}
                   >
                     Next
                   </button>
