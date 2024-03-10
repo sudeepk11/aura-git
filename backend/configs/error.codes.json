@@ -89,7 +89,9 @@
     "minTeamCount": "403-minTeamCount",
     "teamLocked": "403-teamLocked",
     "transactionIdAlreadyExists": "403-transactionIdAlreadyExists",
-    "userIPNotReceived": "403-userIPNotReceived"
+    "userIPNotReceived": "403-userIPNotReceived",
+    "userIsIneligibleForAuraPass": "403-userIsIneligibleForAuraPass",
+    "auraPassAlreadyIssued": "403-auraPassAlreadyIssued"
   },
   "404": {
     "userNotFound": "404-userNotFound",

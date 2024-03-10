@@ -53,13 +53,13 @@ async function getAllCollegeReceiptsCtrl(req, res, next) {
   return next();
 }
 
-async function getCollegeReceiptByIdCtrl(req, res, next) {
+async function getCollegeReceiptByTransactionIdCtrl(req, res, next) {
   try {
     const { params } = req;
 
-    const { id } = params;
+    const { transactionId } = params;
 
-    const collegeReceipt = await CollegeReceipt.findById(id);
+    const collegeReceipt = await CollegeReceipt.findOne({ transactionId });
     if (!collegeReceipt) return res.status(404).send(Response(errors[404].collegeReceiptNotFound));
 
     if (!res.locals.data) res.locals.data = {};
@@ -304,7 +304,7 @@ async function registerUsingCollegeReceiptCtrl(req, res, next) {
 
 module.exports = {
   getAllCollegeReceiptsCtrl,
-  getCollegeReceiptByIdCtrl,
+  getCollegeReceiptByTransactionIdCtrl,
   approveCollegeReceiptCtrl,
   disapproveCollegeReceiptCtrl,
   createCollegeReceiptCtrl,
