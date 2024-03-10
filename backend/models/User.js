@@ -104,6 +104,10 @@ const userSchema = new mongoose.Schema({
       default: null,
     },
   },
+  checked_in: {
+    type: Boolean,
+    default: false,
+  },
   _profile_information: {
     last_password_reset: {
       type: Date,

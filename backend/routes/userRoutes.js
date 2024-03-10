@@ -4,10 +4,12 @@ const { param } = require("express-validator");
 const errors = require("../configs/error.codes.json");
 const { expressValidationErrorHandler } = require("../middleware/validationErrorHandler");
 const { requireVerifiedAuth } = require("../middleware/authMiddleware");
+const { requireAdminAuth } = require("../middleware/adminAuthMiddleware");
 const { complete } = require("../controllers/controllers");
 const {
   userGetController,
   userGetByAuraIdController,
+  userCheckInByAuraIdController,
   userSearchController,
   userUpdateController,
 } = require("../controllers/userController");
@@ -27,6 +29,19 @@ Router.get(
     .withMessage(errors[400].invalidAuraId),
   expressValidationErrorHandler,
   userGetByAuraIdController,
+  complete
+);
+
+Router.post(
+  "/aura-id/:auraId/check-in",
+  requireAdminAuth,
+  param("auraId")
+    .exists()
+    .withMessage(errors[400].auraIdRequired)
+    .matches(/^AURA24-[A-Z]{3}-\d{5}$/)
+    .withMessage(errors[400].invalidAuraId),
+  expressValidationErrorHandler,
+  userCheckInByAuraIdController,
   complete
 );
 

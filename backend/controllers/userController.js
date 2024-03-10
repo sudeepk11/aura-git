@@ -40,6 +40,34 @@ async function userGetByAuraIdController(req, res, next) {
   return next();
 }
 
+async function userCheckInByAuraIdController(req, res, next) {
+  try {
+    const { auraId } = req.params;
+
+    if (!(await User.exists({ aura_id: auraId }))) return res.status(404).send(Response(errors[404].userNotFound));
+
+    await User.updateOne(
+      { aura_id: auraId },
+      {
+        $set: {
+          checked_in: true,
+        },
+      }
+    );
+
+    const user = await User.findOne({ aura_id: auraId }, "-password");
+    if (!user) return res.status(404).send(Response(errors[404].userNotFound));
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.user = user;
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
+}
+
 async function userSearchController(req, res, next) {
   try {
     let {
@@ -139,6 +167,7 @@ async function userUpdateController(req, res, next) {
 module.exports = {
   userGetController,
   userGetByAuraIdController,
+  userCheckInByAuraIdController,
   userSearchController,
   userUpdateController,
 };
