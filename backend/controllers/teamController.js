@@ -12,7 +12,6 @@ const { errorHandler } = require("../utils/utils");
 // Body
 // Create a new team
 module.exports.createTeam = async (req, res, next) => {
-  console.log("Working ");
   if (!res.locals.user) return res.status(401).send(Response(errors[401].authRequired));
 
   try {

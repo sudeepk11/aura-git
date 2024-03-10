@@ -19,6 +19,7 @@ const eventRoutes = require("./routes/eventRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const receiptRoutes = require("./routes/receiptRoutes");
+const collegeReceiptRoutes = require("./routes/collegeReceiptRoutes");
 const submissionRoutes = require("./routes/submissionRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 
@@ -30,6 +31,7 @@ expressApp.use("/events", eventRoutes);
 expressApp.use("/teams", teamRoutes);
 expressApp.use("/tickets", ticketRoutes);
 expressApp.use("/receipts", receiptRoutes);
+expressApp.use("/college-receipts", collegeReceiptRoutes);
 expressApp.use("/submissions", submissionRoutes);
 expressApp.use("/news", newsRoutes);
 

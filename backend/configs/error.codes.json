@@ -30,6 +30,7 @@
     "invalidKind": "400-invalidKind",
     "idRequired": "400-idRequired",
     "collegeRequired": "400-collegeRequired",
+    "invalidCollege": "400-invalidCollege",
     "phoneRequired": "400-phoneRequired",
     "invalidPhone": "400-invalidPhone",
     "invalidLinksBody": "400-invalidLinksBody",
@@ -41,19 +42,36 @@
     "teamAlreadyExists": "400-teamAlreadyExists",
     "ticketAlreadyExists": "400-ticketAlreadyExists",
     "auraIdRequired": "400-auraIdRequired",
+    "invalidAuraId": "400-invalidAuraId",
     "teamMemberAuraIdRequired": "400-teamMemberAuraIdRequired",
     "minTeamCount": "400-minTeamCount",
     "newsContentRequired": "400-newsContentRequired",
     "userIdRequired": "400-userIdRequired",
     "teamIdRequired": "400-teamIdRequired",
+    "invalidTeamId": "400-invalidTeamId",
     "transactionIdRequired": "400-transactionIdRequired",
+    "duplicateTransactionId": "400-duplicateTransactionId",
     "receiptExists": "400-receiptExists",
     "invalidTransactionId": "400-invalidTransactionId",
     "duplicateTeamMembers": "400-duplicateTeamMembers",
-    "captchaTokenRequired": "400-captchaTokenRequired"
+    "captchaTokenRequired": "400-captchaTokenRequired",
+    "amountRequired": "400-amountRequired",
+    "invalidAmount": "400-invalidAmount",
+    "collegeSecretRequired": "400-collegeSecretRequired",
+    "invalidCollegeSecret": "400-invalidCollegeSecret",
+    "duplicateCollegeSecret": "400-duplicateCollegeSecret",
+    "duplicateCollegeSecretOrTransactionId": "400-duplicateCollegeSecretOrTransactionId",
+    "collegeReceiptIdRequired": "400-collegeReceiptIdRequired",
+    "invalidCollegeReceiptId": "400-invalidCollegeReceiptId",
+    "collegeReceiptOutOfBalance": "400-collegeReceiptOutOfBalance",
+    "collegeReceiptUnapproved": "400-collegeReceiptUnapproved",
+    "alreadyPaid": "400-alreadyPaid",
+    "approvedQueryParamCannotBeEmpty": "400-approvedQueryParamCannotBeEmpty",
+    "invalidApprovedQueryParam": "400-invalidApprovedQueryParam"
   },
   "401": {
     "authRequired": "401-authRequired",
+    "adminAuthRequired": "401-adminAuthRequired",
     "invalidOrExpiredToken": "401-invalidOrExpiredToken"
   },
   "403": {
@@ -83,7 +101,8 @@
     "teamNotFound": "404-teamNotFound",
     "submissionNotFound": "404-submissionNotFound",
     "newsNotFound": "404-newsNotFound",
-    "receiptNotFound": "404-receiptNotFound"
+    "receiptNotFound": "404-receiptNotFound",
+    "collegeReceiptNotFound": "404-collegeReceiptNotFound"
   },
   "440": {
     "sessionExpired": "440-sessionExpired",
