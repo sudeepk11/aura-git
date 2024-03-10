@@ -21,8 +21,6 @@ import Schedule from "./Components/Schedule/Schedule";
 import DevTeam from "./Components/DevTeam/DevTeam";
 import Changed from "./Components/ForgotPassword/Changed";
 import ScrollToTop from "./Components/ScrollToTop/ScrollToTop";
-// import Policy from "./Components/Policy/Policy";
-// import AboutUs from "./Components/AboutUs/AboutUs";
 import News from "./Components/News/News";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserIPInfo } from "./Utils/ip.config";
@@ -30,9 +28,10 @@ import { errorToast } from "./Utils/Toasts/Toasts";
 import InstituteReg from "./Components/Institute/InstituteRegistration";
 import InstitutionReceiptsApproval from "./Components/Admin/InstituteReciepts";
 import AdminHomePage from "./Components/Admin/AdminHome";
+import CheckInPage from "./Components/Admin/CheckInPage";
 
 function App() {
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
   const path = useLocation().pathname;
   const navigate = useNavigate();
 
@@ -42,6 +41,7 @@ function App() {
         .get("/auth/user/status")
         .then((res) => {
           if (!res.data.data.authenticated) return setUser(null);
+          console.log(res.data);
           setUser(res.data.profile);
         })
         .catch((err) => {
@@ -50,6 +50,13 @@ function App() {
     };
     fetchData();
   }, [setUser]);
+
+  useEffect(() => {
+    if (user?.role === "admin") {
+      navigate("admin");
+    }
+  }, [user]);
+
   return (
     <div className="App select-none">
       <ScrollToTop />
@@ -88,6 +95,8 @@ function App() {
           <Route path="verifyEmail" element={<Changed />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="news" element={<News />} />
+          <Route path="admin/check-in" element={<CheckInPage />} />
+
           {/* <Route path="terms-and-conditions" element={<Policy />} />
           <Route path="privacy-policy" element={<Policy />} />
           <Route path="refund-policy" element={<Policy />} />

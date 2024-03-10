@@ -80,7 +80,9 @@ const UserPage = () => {
 
   const getEventById = async (id) => {
     try {
-      const response = await api.get(`/events/resolve/${id}?excludeRegisteredTeams=true`);
+      const response = await api.get(
+        `/events/resolve/${id}?excludeRegisteredTeams=true`
+      );
       const responseData = response.data;
 
       return responseData.data.event;
@@ -91,7 +93,7 @@ const UserPage = () => {
 
   const getEvents = async () => {
     const events = await Promise.all(
-      userEvents.map(async event => {
+      userEvents.map(async (event) => {
         return getEventById(event.event_participated.event_id);
       })
     );
@@ -362,73 +364,69 @@ const UserPage = () => {
                   {teamDropdown[event._id] && (
                     <>
                       <div className="w-full mt-3 md:px-0 px-2">
-                      <h3 className="font-semibold text-lg">
-                        Team Name: {event.team_name}
-                      </h3>
-                      <div className="flex md:flex-row flex-col justify-between items-center w-full rounded-full bg-gray-100 mx-auto my-2 px-5 py-1">
-                        <h1 className="font-semibold text-lg">
-                          {event.team_leader.id === uid
-                            ? "You"
-                            : event.team_leader.name}
-                          <span className="text-sm font-thin mx-2 px-3 bg-green-200 rounded-full">
-                            Leader
-                          </span>
-                        </h1>
-                        <h3 className="relative">
-                          <span
-                            className="font-semibold cursor-pointer"
-                            onClick={() => {
-                              navigator.clipboard.writeText(
-                                event.team_leader.aura_id
-                              );
-                              successToast(
-                                `Copied AURA ID ${event.team_leader.aura_id}`
-                              );
-                            }}
-                          >
-                            {event.team_leader.aura_id}
-                          </span>
+                        <h3 className="font-semibold text-lg">
+                          Team Name: {event.team_name}
                         </h3>
-                      </div>
-                      {event.team_members.map((member) => (
                         <div className="flex md:flex-row flex-col justify-between items-center w-full rounded-full bg-gray-100 mx-auto my-2 px-5 py-1">
                           <h1 className="font-semibold text-lg">
-                            {member.id === uid ? "You" : member.name}
+                            {event.team_leader.id === uid
+                              ? "You"
+                              : event.team_leader.name}
                             <span className="text-sm font-thin mx-2 px-3 bg-green-200 rounded-full">
-                              Member
+                              Leader
                             </span>
                           </h1>
                           <h3 className="relative">
                             <span
                               className="font-semibold cursor-pointer"
                               onClick={() => {
-                                navigator.clipboard.writeText(member.aura_id);
+                                navigator.clipboard.writeText(
+                                  event.team_leader.aura_id
+                                );
                                 successToast(
-                                  `Copied AURA ID ${member.aura_id}`
+                                  `Copied AURA ID ${event.team_leader.aura_id}`
                                 );
                               }}
                             >
-                              {member.aura_id}
+                              {event.team_leader.aura_id}
                             </span>
                           </h3>
                         </div>
-                      ))}
-                    </div>
-                      {
-                        event.payment_status &&
+                        {event.team_members.map((member) => (
+                          <div className="flex md:flex-row flex-col justify-between items-center w-full rounded-full bg-gray-100 mx-auto my-2 px-5 py-1">
+                            <h1 className="font-semibold text-lg">
+                              {member.id === uid ? "You" : member.name}
+                              <span className="text-sm font-thin mx-2 px-3 bg-green-200 rounded-full">
+                                Member
+                              </span>
+                            </h1>
+                            <h3 className="relative">
+                              <span
+                                className="font-semibold cursor-pointer"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(member.aura_id);
+                                  successToast(
+                                    `Copied AURA ID ${member.aura_id}`
+                                  );
+                                }}
+                              >
+                                {member.aura_id}
+                              </span>
+                            </h3>
+                          </div>
+                        ))}
+                      </div>
+                      {event.payment_status && (
                         <div className="text-sm flex items-center gap-5">
                           <FontAwesomeIcon icon="fab fa-whatsapp" />
-                          <img
-                            src={WhatsappIcon}
-                            width="20px"
-                          />
+                          <img src={WhatsappIcon} width="20px" />
                           <a href={events[index]?.whatsapp_group}>
                             <p className="text-center font-semibold text-green-800">
                               {events[index]?.whatsapp_group}
                             </p>
                           </a>
                         </div>
-                      }
+                      )}
                     </>
                   )}
                 </div>

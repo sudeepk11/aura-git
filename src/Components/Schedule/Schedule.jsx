@@ -1,8 +1,8 @@
 import { useState } from "react";
-import day0 from "../../Assets/coming_soon/1.svg";
-import day1 from "../../Assets/coming_soon//2.svg";
-import day2 from "../../Assets/coming_soon/3.svg";
-import day3 from "../../Assets/coming_soon/4.svg";
+import day0 from "../../Assets/Schedule/1.png";
+import day1 from "../../Assets/Schedule/2.png";
+import day2 from "../../Assets/Schedule/3.png";
+import day3 from "../../Assets/Schedule/4.png";
 
 const Schedule = () => {
   const [day, setDay] = useState(0);
@@ -26,7 +26,7 @@ const Schedule = () => {
         <h1 className="text-3xl font-bold text-center">Schedule</h1>
         <div className="grid grid-cols-4 md:gap-x-4 gap-x-1 my-5">
           <button
-            className={`btn ${day == 0 ? "btn-secondary" : "btn-primary"}`}
+            className={`btn ${day === 0 ? "btn-secondary" : "btn-primary"}`}
             onClick={(e) => {
               setDay(0);
               updateBg(e);
@@ -36,7 +36,7 @@ const Schedule = () => {
             Day 0
           </button>
           <button
-            className={`btn ${day == 1 ? "btn-secondary" : "btn-primary"}`}
+            className={`btn ${day === 1 ? "btn-secondary" : "btn-primary"}`}
             onClick={(e) => {
               setDay(1);
               updateBg(e);
@@ -46,7 +46,7 @@ const Schedule = () => {
             Day 1
           </button>
           <button
-            className={`btn ${day == 2 ? "btn-secondary" : "btn-primary"}`}
+            className={`btn ${day === 2 ? "btn-secondary" : "btn-primary"}`}
             onClick={(e) => {
               setDay(2);
               updateBg(e);
@@ -56,7 +56,7 @@ const Schedule = () => {
             Day 2
           </button>
           <button
-            className={`btn ${day == 3 ? "btn-secondary" : "btn-primary"}`}
+            className={`btn ${day === 3 ? "btn-secondary" : "btn-primary"}`}
             onClick={(e) => {
               setDay(3);
               updateBg(e);
@@ -67,32 +67,32 @@ const Schedule = () => {
           </button>
         </div>
         <div className="w-full h-auto overflow-x-scroll [&::-webkit-scrollbar]:hidden my-5">
-          {day == 0 && (
+          {day === 0 && (
             <img
               src={day0}
               alt="Day 0 Schedule"
-              className="md:w-full md:h-[80vh] h-80 max-w-none"
+              className="md:w-full h-[32rem] md:h-fit max-w-none"
             />
           )}
-          {day == 1 && (
+          {day === 1 && (
             <img
               src={day1}
               alt="Day 1 Schedule"
-              className="md:w-full md:h-[80vh] h-80 max-w-none"
+              className="md:w-full h-[32rem] md:h-fit max-w-none"
             />
           )}
-          {day == 2 && (
+          {day === 2 && (
             <img
               src={day2}
               alt="Day 2 Schedule"
-              className="md:w-full md:h-[80vh] h-80 max-w-none"
+              className="md:w-full h-[32rem] md:h-fit max-w-none"
             />
           )}
-          {day == 3 && (
+          {day === 3 && (
             <img
               src={day3}
               alt="Day 3 Schedule"
-              className="md:w-full md:h-[80vh] h-80 max-w-none"
+              className="md:w-full h-[32rem] md:h-fit max-w-none"
             />
           )}
         </div>
