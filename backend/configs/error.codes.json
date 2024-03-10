@@ -42,6 +42,7 @@
     "teamAlreadyExists": "400-teamAlreadyExists",
     "ticketAlreadyExists": "400-ticketAlreadyExists",
     "auraIdRequired": "400-auraIdRequired",
+    "invalidAuraId": "400-invalidAuraId",
     "teamMemberAuraIdRequired": "400-teamMemberAuraIdRequired",
     "minTeamCount": "400-minTeamCount",
     "newsContentRequired": "400-newsContentRequired",
