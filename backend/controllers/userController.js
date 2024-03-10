@@ -164,6 +164,95 @@ async function userCheckInByAuraIdController(req, res, next) {
   return next();
 }
 
+async function userIssueAuraPassByAuraIdController(req, res, next) {
+  try {
+    const { params } = req;
+
+    const { auraId } = params;
+
+    // Check if the user exists
+    const user = await User.findOne({ aura_id: auraId });
+    if (!user) return res.status(404).send(Response(errors[404].userNotFound));
+
+    // Check if the user was already issued the pass
+    if (user.aura_pass_issued) return res.status(403).send(Response(errors[403].auraPassAlreadyIssued));
+
+    // Aggregation query
+    const aggregationResult = await User.aggregate([
+      { $match: { aura_id: auraId } },
+      {
+        $lookup: {
+          from: "teams",
+          localField: "_id",
+          foreignField: "team_leader.id",
+          as: "teams",
+        },
+      },
+      {
+        $lookup: {
+          from: "teams",
+          localField: "_id",
+          foreignField: "team_members.id",
+          as: "teams2",
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "teams._id",
+          foreignField: "team",
+          as: "team_receipts",
+        },
+      },
+      {
+        $lookup: {
+          from: "receipts",
+          localField: "teams2._id",
+          foreignField: "team",
+          as: "team2_receipts",
+        },
+      },
+      {
+        $project: {
+          team_receipts: 1,
+          team2_receipts: 1,
+          isAuraPassIssuable: {
+            $or: [
+              {
+                $gt: [{ $size: "$team_receipts" }, 0],
+              },
+              {
+                $gt: [{ $size: "$team2_receipts" }, 0],
+              },
+            ],
+          },
+        },
+      },
+      { $project: { isAuraPassIssuable: 1 } },
+    ]);
+    const isAuraPassIssuable = aggregationResult[0].isAuraPassIssuable;
+    if (!isAuraPassIssuable) return res.status(403).send(Response(errors[403].userIsIneligibleForAuraPass));
+
+    // Issue user aura pass
+    await User.updateOne(
+      { aura_id: auraId },
+      {
+        $set: {
+          aura_pass_issued: true,
+        },
+      }
+    );
+
+    if (!res.locals.data) res.locals.data = {};
+    res.locals.data.auraPassIssued = true;
+  } catch (error) {
+    const { status, message } = errorHandler(error);
+    return res.status(status).send(Response(message));
+  }
+
+  return next();
+}
+
 async function userSearchController(req, res, next) {
   try {
     let {
@@ -264,6 +353,7 @@ module.exports = {
   userGetController,
   userGetByAuraIdController,
   userCheckInByAuraIdController,
+  userIssueAuraPassByAuraIdController,
   userSearchController,
   userUpdateController,
 };

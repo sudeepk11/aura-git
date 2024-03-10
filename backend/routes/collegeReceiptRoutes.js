@@ -7,7 +7,7 @@ const { requireAdminAuth } = require("../middleware/adminAuthMiddleware");
 const { complete } = require("../controllers/controllers");
 const {
   getAllCollegeReceiptsCtrl,
-  getCollegeReceiptByIdCtrl,
+  getCollegeReceiptByTransactionIdCtrl,
   approveCollegeReceiptCtrl,
   disapproveCollegeReceiptCtrl,
   createCollegeReceiptCtrl,
@@ -33,15 +33,15 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/:transactionId",
   requireAdminAuth,
-  param("id")
+  param("transactionId")
     .exists()
-    .withMessage(errorCodes[400].collegeReceiptIdRequired)
-    .isMongoId()
-    .withMessage(errorCodes[400].invalidCollegeReceiptId),
+    .withMessage(errorCodes[400].transactionIdRequired)
+    .matches(/^[a-z0-9-]+$/i)
+    .withMessage(errorCodes[400].invalidTransactionId),
   expressValidationErrorHandler,
-  getCollegeReceiptByIdCtrl,
+  getCollegeReceiptByTransactionIdCtrl,
   complete
 );
 
