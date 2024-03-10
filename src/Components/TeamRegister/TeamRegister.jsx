@@ -24,6 +24,7 @@ const TeamRegister = (props) => {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [transID, setTransaction] = useState("");
+  const [instituteSecret, setInstituteSecret] = useState("");
   const [paidByInstitute, setPaidByInstitute] = useState(false);
   const event_participated = {
     event_id: props.id,
@@ -78,7 +79,6 @@ const TeamRegister = (props) => {
   };
 
   const errorHandler = (err) => {
-    console.log(err);
     let err_status = err.response.status;
     let err_code = err.response.data.error;
     setLoading(false);
@@ -211,11 +211,51 @@ const TeamRegister = (props) => {
           setShowModal(false);
         })
         .catch((err) => {
-          errorToast("Failed to record payment");
+          // "400-receiptExists"
+          if (
+            err.response.status === 400 &&
+            err.response.data.error === "400-receiptExists"
+          )
+            errorToast("This transaction ID has already been used.");
+          else errorToast("Failed to record payment");
         });
     } else {
       errorToast("The Transaction ID was invalid.");
     }
+  };
+
+  const payUsingInstituteCredits = () => {
+    if (instituteSecret === "") {
+      errorToast("Please enter Institute Secret");
+      return;
+    }
+    api
+      .post(`/college-receipts/register`, {
+        teamId: props.team._id,
+        transactionId: transID,
+        collegeSecret: instituteSecret,
+      })
+      .then((res) => {
+        successToast("Your payment has been recorded.");
+        props.setPaid(true);
+        setShowModal(false);
+      })
+      .catch((err) => {
+        // 400-collegeReceiptUnapproved
+        // "404-collegeReceiptNotFound"
+        console.log(err);
+        if (
+          err.response.status === 400 &&
+          err.response.data.error === "400-collegeReceiptUnapproved"
+        )
+          errorToast("Your college receipt has not been approved yet.");
+        else if (
+          err.response.status === 404 &&
+          err.response.data.error === "404-collegeReceiptNotFound"
+        )
+          errorToast("Invalid Transaction Id or Institute Secret");
+        else errorToast("Failed to record payment");
+      });
   };
   const renderInputForms = (x) => {
     const inputForms = [];
@@ -275,25 +315,28 @@ const TeamRegister = (props) => {
                       : "Paid by Institute? Click here."}
                   </button>
 
+                  <input
+                    className="bg-gray-100 w-full rounded-lg p-2 col-span-1 outline-none my-3"
+                    type="text"
+                    name="transactionID"
+                    id="txnID"
+                    onChange={(e) => setTransaction(e.target.value.trim())}
+                    required
+                    placeholder="Enter Transaction ID"
+                  />
                   {/* Paid by institute then ask for institute secret */}
-                  {paidByInstitute ? (
+                  {paidByInstitute && (
                     <input
                       className="bg-gray-100 w-full rounded-lg p-2 col-span-1 outline-none my-3"
                       type="password"
                       name="instituteSecret"
                       id="instituteSecret"
                       required
+                      onChange={(e) =>
+                        setInstituteSecret(e.target.value.trim())
+                      }
+                      value={instituteSecret}
                       placeholder="Enter Institute Secret"
-                    />
-                  ) : (
-                    <input
-                      className="bg-gray-100 w-full rounded-lg p-2 col-span-1 outline-none my-3"
-                      type="text"
-                      name="transactionID"
-                      id="txnID"
-                      onChange={(e) => setTransaction(e.target.value.trim())}
-                      required
-                      placeholder="Enter Transaction ID"
                     />
                   )}
                 </div>
@@ -309,7 +352,13 @@ const TeamRegister = (props) => {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => pay()}
+                    onClick={() => {
+                      if (paidByInstitute) {
+                        payUsingInstituteCredits();
+                      } else {
+                        pay();
+                      }
+                    }}
                   >
                     Next
                   </button>

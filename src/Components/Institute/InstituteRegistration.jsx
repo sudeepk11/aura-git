@@ -22,6 +22,7 @@ const InstituteReg = () => {
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const handleSubmit = (e) => {
+    setError("");
     e.preventDefault();
     if (!collegeSecret | !collegeName | !amount | !transactionId) {
       setError("Please enter all fields");
@@ -48,6 +49,7 @@ const InstituteReg = () => {
 
     setLoading(true);
     handleFormSubmit();
+    if (error === "") return;
     setCollegeName("");
     setCollegeSecret("");
     setAmount("");
@@ -66,6 +68,7 @@ const InstituteReg = () => {
           "We have received your details. The council will soon approve your request."
         );
         setLoading(false);
+        setError("");
       })
       .catch((error) => {
         setLoading(false);
@@ -100,7 +103,7 @@ const InstituteReg = () => {
         )}
         {loading && (
           <p className="msg-box text-green-500 text-center">
-            Sending Verification link...
+            Verifying your details...
           </p>
         )}
         <div>
