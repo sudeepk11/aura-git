@@ -38,7 +38,7 @@ function CheckInPage() {
         return;
       }
 
-      if (data?.data?.user?.email_verified === false) {
+      if (user?.email_verified === false) {
         setError("Email not verified")
         return;
       }
