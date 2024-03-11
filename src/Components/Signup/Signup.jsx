@@ -37,25 +37,30 @@ const Signup = () => {
 
     try {
       const userIPInfo = await getUserIPInfo();
-      if (userIPInfo === undefined)
-        throw new Error("Signup failed. Please try after sometime.");
+      // if (userIPInfo === undefined)
+      //   throw new Error("Signup failed. Please try after sometime.");
 
-      // eslint-disable-next-line no-undef
-      grecaptcha.ready(function () {
+      if (userIPInfo !== undefined) {
         // eslint-disable-next-line no-undef
-        grecaptcha
-          .execute("6Lfwz48pAAAAAPKkSOzxtJJJdKZJx617gzQ5dri4", {
-            action: "submit",
-          })
-          .then(function (token) {
-            // Add your logic to submit to your backend server here.
+        grecaptcha.ready(function () {
+          // eslint-disable-next-line no-undef
+          grecaptcha
+            .execute("6Lfwz48pAAAAAPKkSOzxtJJJdKZJx617gzQ5dri4", {
+              action: "submit",
+            })
+            .then(function (token) {
+              // Add your logic to submit to your backend server here.
 
-            handleSignUp(token, userIPInfo.ip);
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-      });
+              handleSignUp(token, userIPInfo.ip);
+            })
+            .catch(function (error) {
+              errorToast("reCaptcha failure");
+              console.error(error);
+            });
+        });
+      } else {
+        handleSignUp(undefined, undefined);
+      }
     } catch (error) {
       console.error(error);
       alert(error?.message);
