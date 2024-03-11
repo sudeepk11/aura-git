@@ -30,9 +30,10 @@ function CheckInPage() {
 
     try {
       const { data } = await api.get(`users/aura-id/${auraId}`);
+      const user = data?.data?.user;
       if (data?.success === false) throw new Error("Failed to fetch");
 
-      if (data?.data?.checked_in === true) {
+      if (user?.checked_in === true) {
         setError("Aura ID already checked in");
         return;
       }
