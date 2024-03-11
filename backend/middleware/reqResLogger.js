@@ -20,8 +20,8 @@ function reqResLogger(req, res, next) {
 
     try {
       responseJson = JSON.parse(responseBody);
-    } catch (error) {
-      console.error(error);
+    } catch (_) {
+      /* empty */
     }
 
     originalEnd.apply(res, [chunk]);
