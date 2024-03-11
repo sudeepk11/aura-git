@@ -22,6 +22,7 @@ const receiptRoutes = require("./routes/receiptRoutes");
 const collegeReceiptRoutes = require("./routes/collegeReceiptRoutes");
 const submissionRoutes = require("./routes/submissionRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const logRoutes = require("./routes/logRoutes");
 const { reqResLogger } = require("./middleware/reqResLogger");
 
 // Route Middlewares
@@ -35,6 +36,7 @@ expressApp.use("/receipts", reqResLogger, receiptRoutes);
 expressApp.use("/college-receipts", reqResLogger, collegeReceiptRoutes);
 expressApp.use("/submissions", reqResLogger, submissionRoutes);
 expressApp.use("/news", reqResLogger, newsRoutes);
+expressApp.use("/logs", logRoutes);
 
 // Setup cron jobs
 require("./scripts/cron.jobs.script");
