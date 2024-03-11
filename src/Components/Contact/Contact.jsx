@@ -11,7 +11,7 @@ import Adarsh from "../../Assets/Team/adarsh.jpg";
 import Shambavi from "../../Assets/Team/shambhavi.jpg";
 import Soumya from "../../Assets/Team/soumya.jpg";
 import Rohan from "../../Assets/Team/rohan.jpg";
-
+import Shambhavi from "../../Assets/Shambhavi.jpeg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
@@ -33,7 +33,7 @@ const council = [
   {
     name: "Shambhavi Shirgurkar",
     role: "General Secretary",
-    image: Soumya,
+    image: Shambhavi,
     // instagram: "https://www.instagram.com/Sanjitha_bhat/",
     phone: 7022095209,
     // handle: "Sanjitha_bhat",
