@@ -5,7 +5,7 @@ const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET;
 
 const RECAPTCHA_URL = process.env.RECAPTCHA_VERIFICATION_URL;
 
-async function verifyCaptchaToken(token, userIP) {
+async function verifyCaptchaToken(token) {
   let isVerified = false;
 
   if (token === undefined || String(token).trim() === "") return (isVerified = true);

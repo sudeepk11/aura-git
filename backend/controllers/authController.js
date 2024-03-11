@@ -39,7 +39,6 @@ module.exports.signup_post = async (req, res, next) => {
       college = undefined,
       password = undefined,
       token = undefined,
-      userIP = undefined,
     } = req.body;
 
     if (name === undefined) return res.status(400).send(Response(errors[400].nameRequired));
@@ -51,9 +50,8 @@ module.exports.signup_post = async (req, res, next) => {
 
     if (ENABLE_RECAPTCHA_VALIDATION === "1") {
       if (token === undefined) return res.status(400).send(Response(errors[400].captchaTokenRequired));
-      if (userIP === undefined) return res.status(400).send(Response(errors[403].userIPNotReceived));
 
-      const isVerified = await verifyCaptchaToken(token, userIP);
+      const isVerified = await verifyCaptchaToken(token);
       if (!isVerified) return res.status(403).send(Response("Captcha verification failed."));
     }
 
