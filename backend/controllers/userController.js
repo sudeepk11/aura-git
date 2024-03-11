@@ -125,6 +125,7 @@ async function userGetByAuraIdController(req, res, next) {
     if (aggregationResult.length === 0) return res.status(404).send(Response(errors[404].userNotFound));
 
     const user = aggregationResult[0];
+    user.receipts = user.receipts.filter(receipt => Object.keys(receipt).length > 0);
 
     if (!res.locals.data) res.locals.data = {};
     res.locals.data.user = user;

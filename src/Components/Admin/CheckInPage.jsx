@@ -133,7 +133,7 @@ function CheckInPage() {
             {fetchedUser?.receipts && (
               <div>
                 <h3 className="font-bold">Receipts:</h3>
-                {fetchedUser.receipts.map((receipt) => (
+                {fetchedUser.receipts?.map((receipt) => (
                   <div key={receipt._id} className="border border-gray-300 rounded p-2 mt-2">
                     <p><strong>Transaction ID:</strong> {receipt.transaction_id}</p>
                     <p><strong>Team Name:</strong> {receipt.team.team_name}</p>
