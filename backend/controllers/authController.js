@@ -8,6 +8,7 @@ const { bcryptHash, errorHandler } = require("../utils/utils");
 const { verifyCaptchaToken } = require("../utils/captcha.util");
 
 // Constants
+const { ENABLE_RECAPTCHA_VALIDATION = "1" } = process.env;
 const errorMessages = Object.freeze({
   byCodes: {
     11000: {
@@ -38,7 +39,6 @@ module.exports.signup_post = async (req, res, next) => {
       college = undefined,
       password = undefined,
       token = undefined,
-      userIP = undefined,
     } = req.body;
 
     if (name === undefined) return res.status(400).send(Response(errors[400].nameRequired));
@@ -47,11 +47,13 @@ module.exports.signup_post = async (req, res, next) => {
     if (usn === undefined) return res.status(400).send(Response(errors[400].usnRequired));
     if (college === undefined) return res.status(400).send(Response(errors[400].collegeRequired));
     if (password === undefined) return res.status(400).send(Response(errors[400].passwordRequired));
-    if (token === undefined) return res.status(400).send(Response(errors[400].captchaTokenRequired));
-    if (userIP === undefined) return res.status(400).send(Response(errors[403].userIPNotReceived));
 
-    const isVerified = await verifyCaptchaToken(token, userIP);
-    if (!isVerified) return res.status(403).send(Response("Captcha verification failed."));
+    if (ENABLE_RECAPTCHA_VALIDATION === "1") {
+      if (token === undefined) return res.status(400).send(Response(errors[400].captchaTokenRequired));
+
+      const isVerified = await verifyCaptchaToken(token);
+      if (!isVerified) return res.status(403).send(Response("Captcha verification failed."));
+    }
 
     const user = await User.create({
       name,

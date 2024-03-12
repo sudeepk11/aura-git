@@ -21,6 +21,20 @@ const infoTransport = new winston.transports.DailyRotateFile({
   maxSize: "5m",
   maxFiles: "1d",
 });
+const reqResTransport = new winston.transports.DailyRotateFile({
+  level: "info",
+  filename: "reqResLog-%DATE%.log",
+  dirname: "req_res_logs",
+  datePattern: "YYYY-MM-DD-HH",
+  zippedArchive: true,
+  maxSize: "5m",
+  maxFiles: "1d",
+  format: winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DDTHH:mm:ss" }),
+    winston.format.json(),
+    winston.format.json({ space: 2 })
+  ),
+});
 
 const logger = winston.createLogger({
   level: "info",
@@ -34,8 +48,13 @@ const logger = winston.createLogger({
   ),
   transports: [errorTransport, infoTransport],
 });
+const requestResponseLogger = winston.createLogger({
+  level: "info",
+  transports: [reqResTransport],
+});
 
 module.exports = {
   logInfo: logger.info,
   logError: logger.error,
+  logReqResCycle: requestResponseLogger,
 };

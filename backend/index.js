@@ -22,18 +22,21 @@ const receiptRoutes = require("./routes/receiptRoutes");
 const collegeReceiptRoutes = require("./routes/collegeReceiptRoutes");
 const submissionRoutes = require("./routes/submissionRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const logRoutes = require("./routes/logRoutes");
+const { reqResLogger } = require("./middleware/reqResLogger");
 
 // Route Middlewares
-expressApp.get("*", checkUser);
-expressApp.use("/auth/user", authRoutes);
-expressApp.use("/users", userRoutes);
-expressApp.use("/events", eventRoutes);
-expressApp.use("/teams", teamRoutes);
-expressApp.use("/tickets", ticketRoutes);
-expressApp.use("/receipts", receiptRoutes);
-expressApp.use("/college-receipts", collegeReceiptRoutes);
-expressApp.use("/submissions", submissionRoutes);
-expressApp.use("/news", newsRoutes);
+expressApp.get("*", reqResLogger, checkUser);
+expressApp.use("/auth/user", reqResLogger, authRoutes);
+expressApp.use("/users", reqResLogger, userRoutes);
+expressApp.use("/events", reqResLogger, eventRoutes);
+expressApp.use("/teams", reqResLogger, teamRoutes);
+expressApp.use("/tickets", reqResLogger, ticketRoutes);
+expressApp.use("/receipts", reqResLogger, receiptRoutes);
+expressApp.use("/college-receipts", reqResLogger, collegeReceiptRoutes);
+expressApp.use("/submissions", reqResLogger, submissionRoutes);
+expressApp.use("/news", reqResLogger, newsRoutes);
+expressApp.use("/logs", logRoutes);
 
 // Setup cron jobs
 require("./scripts/cron.jobs.script");

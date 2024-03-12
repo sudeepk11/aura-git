@@ -3,7 +3,6 @@ import { useState } from "react";
 import { successToast, errorToast } from "../../Utils/Toasts/Toasts";
 import api from "../../Utils/axios.config";
 import colleges from "../../Dataset/collegesKar.json";
-import { getUserIPInfo } from "../../Utils/ip.config";
 
 const collegesList = colleges.map((college, index) => (
   <option key={index} value={college.college}>
@@ -36,10 +35,6 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const userIPInfo = await getUserIPInfo();
-      if (userIPInfo === undefined)
-        throw new Error("Signup failed. Please try after sometime.");
-
       // eslint-disable-next-line no-undef
       grecaptcha.ready(function () {
         // eslint-disable-next-line no-undef
@@ -50,10 +45,13 @@ const Signup = () => {
           .then(function (token) {
             // Add your logic to submit to your backend server here.
 
-            handleSignUp(token, userIPInfo.ip);
+            handleSignUp(token);
           })
           .catch(function (error) {
+            errorToast("Warning: reCaptcha failure, proceeding without reCaptcha...");
             console.error(error);
+
+            handleSignUp(undefined);
           });
       });
     } catch (error) {
@@ -62,7 +60,7 @@ const Signup = () => {
     }
   };
 
-  const handleSignUp = async (token, userIP) => {
+  const handleSignUp = async (token) => {
     try {
       const fields = {
         name,
@@ -74,8 +72,6 @@ const Signup = () => {
       };
 
       if (token !== undefined) fields.token = token;
-
-      if (userIP !== undefined) fields.userIP = userIP;
 
       await api.post("/auth/user/signup", fields).then((res) => {
         if (res.data.data.user) {
