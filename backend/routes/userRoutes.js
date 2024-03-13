@@ -26,7 +26,7 @@ Router.get(
   param("auraId")
     .exists()
     .withMessage(errors[400].auraIdRequired)
-    .matches(/^AURA24-[A-Z]{3}-\d{5}$/)
+    .matches(/^AURA24-[A-Z]+-\d{5}$/)
     .withMessage(errors[400].invalidAuraId),
   expressValidationErrorHandler,
   userGetByAuraIdController,
@@ -39,7 +39,7 @@ Router.post(
   param("auraId")
     .exists()
     .withMessage(errors[400].auraIdRequired)
-    .matches(/^AURA24-[A-Z]{3}-\d{5}$/)
+    .matches(/^AURA24-[A-Z]+-\d{5}$/)
     .withMessage(errors[400].invalidAuraId),
   expressValidationErrorHandler,
   userIssueAuraPassByAuraIdController,
@@ -52,7 +52,7 @@ Router.post(
   param("auraId")
     .exists()
     .withMessage(errors[400].auraIdRequired)
-    .matches(/^AURA24-[A-Z]{3}-\d{5}$/)
+    .matches(/^AURA24-[A-Z]+-\d{5}$/)
     .withMessage(errors[400].invalidAuraId),
   expressValidationErrorHandler,
   userCheckInByAuraIdController,
